@@ -53,6 +53,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
             foreach (var item in path)
             {
                 Vector3 playerNewPos = new Vector3(item.x, 0, item.y);
+                player.LookAt(playerNewPos);
                 player.position = playerNewPos;
                 yield return new WaitForSeconds(0.5f);
             }
