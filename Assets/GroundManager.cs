@@ -20,6 +20,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
 
     void FindPath(Vector2Int goalPos)
     {
+        StopAllCoroutines();
         StartCoroutine(FindPathCo(goalPos));
     }
     IEnumerator FindPathCo(Vector2Int goalPos)
