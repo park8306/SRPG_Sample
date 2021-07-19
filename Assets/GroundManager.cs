@@ -49,18 +49,27 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         }
         else
         {
-            Player.SelectPlayer.PlayAnimation("Walk");
             // 길이 있다면
+            // 애니메이션 Walk를 실행
+            Player.SelectPlayer.PlayAnimation("Walk");
+            // FollowTarget의 SetTarget을 실행시켜 선택된 캐릭터를 카메라가 따라가게 하자
+            FollowTarget.Instance.SetTarget(Player.SelectPlayer.transform);
             // path에 저장되어있는 위치를 하나씩 불러와 이동 시키자
             foreach (var item in path)
             {
                 Vector3 playerNewPos = new Vector3(item.x, 0, item.y);
+                // 플레이어가 이동할 방향으로 바라보자
                 player.LookAt(playerNewPos);
-                //player.position = playerNewPos;
+                // 플레이어가 움직일 때 자연스럽게 움직이도록 하자
+                // DOMove함수는 DOTween을 임포트하여 가져온 함수
                 player.DOMove(playerNewPos, moveTimePerUnit).SetEase(moveEase);
+                // 움직이는 시간 만큼 기다리자
                 yield return new WaitForSeconds(moveTimePerUnit);
             }
+            // 이동이 끝나면 Idle애니메이션을 실행시키자
             Player.SelectPlayer.PlayAnimation("Idle");
+            // null을 주어 카메라가 따라가지 않도록 하자
+            FollowTarget.Instance.SetTarget(null);
         }
     }
     public Ease moveEase = Ease.Linear;
