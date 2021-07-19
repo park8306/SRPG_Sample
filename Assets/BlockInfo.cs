@@ -10,4 +10,8 @@ public enum BlockType
 public class BlockInfo : MonoBehaviour
 {
     public BlockType blockType;
+    private void OnMouseDown()
+    {
+        GroundManager.Instance.OnTouch(transform.position);
+    }
 }

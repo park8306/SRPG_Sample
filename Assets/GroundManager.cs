@@ -1,23 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundManager : MonoBehaviour
+public class GroundManager : SingletonMonoBehavior<GroundManager>
 {
     public Vector2Int playerPos;
-    public Vector2Int goalPos;
     public Dictionary<Vector2Int, int> map = new Dictionary<Vector2Int, int>();
+
+    internal void OnTouch(Vector3 position)
+    {
+        Vector2Int findPos = new Vector2Int((int)position.x, (int)position.z);
+        FindPath(findPos);
+    }
+
     public List<int> passableValues = new List<int>();
     // Start is called before the first frame update
     public Transform player;
-    public Transform goal;
 
-    [ContextMenu("길찾기 테스트")]
-    void Start()
+    void FindPath(Vector2Int goalPos)
     {
-        FindPathCo();
+        StartCoroutine(FindPathCo(goalPos));
     }
-    IEnumerator FindPathCo()
+    IEnumerator FindPathCo(Vector2Int goalPos)
     { 
         passableValues = new List<int>();
         passableValues.Add((int)BlockType.Walkable);    // 지나갈 수 있는 타입을 int형으로 변환하여 저장
@@ -33,8 +38,6 @@ public class GroundManager : MonoBehaviour
         playerPos.x = (int)player.position.x;   // 플레이어의 위치 저장
         playerPos.y = (int)player.position.z;
 
-        goalPos.x = (int)goal.position.x;   // 목표지점의 위치 저장
-        goalPos.y = (int)goal.position.z;
         // 길 찾아주는 로직을 활용하여 길을 찾자
         List<Vector2Int> path = PathFinding2D.find4(playerPos, goalPos, map, passableValues);
         if (path.Count == 0)
