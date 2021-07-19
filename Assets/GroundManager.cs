@@ -13,8 +13,12 @@ public class GroundManager : MonoBehaviour
     public Transform goal;
 
     [ContextMenu("길찾기 테스트")]
-    IEnumerator Start()
+    void Start()
     {
+        FindPathCo();
+    }
+    IEnumerator FindPathCo()
+    { 
         passableValues = new List<int>();
         passableValues.Add((int)BlockType.Walkable);
 
