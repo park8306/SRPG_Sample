@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -48,21 +49,20 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         }
         else
         {
+            Player.SelectPlayer.PlayAnimation("Walk");
             // 길이 있다면
             // path에 저장되어있는 위치를 하나씩 불러와 이동 시키자
             foreach (var item in path)
             {
                 Vector3 playerNewPos = new Vector3(item.x, 0, item.y);
                 player.LookAt(playerNewPos);
-                player.position = playerNewPos;
-                yield return new WaitForSeconds(0.5f);
+                //player.position = playerNewPos;
+                player.DOMove(playerNewPos, moveTimePerUnit).SetEase(moveEase);
+                yield return new WaitForSeconds(moveTimePerUnit);
             }
+            Player.SelectPlayer.PlayAnimation("Idle");
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Ease moveEase = Ease.Linear;
+    public float moveTimePerUnit = 0.3f;
 }
