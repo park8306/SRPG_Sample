@@ -23324,7 +23324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6af84759ca7c92f4f952fa0b9640e75a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockType: 0
+  blockType: 5
   clickDistance: 1
 --- !u!1001 &1763771083
 PrefabInstance:

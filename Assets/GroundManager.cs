@@ -7,15 +7,15 @@ using UnityEngine;
 public class GroundManager : SingletonMonoBehavior<GroundManager>
 {
     public Vector2Int playerPos;
-    public Dictionary<Vector2Int, int> map = new Dictionary<Vector2Int, int>();
+    public Dictionary<Vector2Int, BlockType> map = new Dictionary<Vector2Int, BlockType>();
 
     internal void OnTouch(Vector3 position)
     {
-        Vector2Int findPos = new Vector2Int((int)position.x, (int)position.z);
+        Vector2Int findPos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
         FindPath(findPos);
     }
 
-    public List<int> passableValues = new List<int>();
+    public BlockType passableValues = BlockType.Walkable | BlockType.Water;
     // Start is called before the first frame update
     public Transform player;
 
@@ -26,8 +26,8 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     }
     IEnumerator FindPathCo(Vector2Int goalPos)
     { 
-        passableValues = new List<int>();
-        passableValues.Add((int)BlockType.Walkable);    // 지나갈 수 있는 타입을 int형으로 변환하여 저장
+        //passableValues = new List<int>();
+        //passableValues.Add((int)BlockType.Walkable);    // 지나갈 수 있는 타입을 int형으로 변환하여 저장
 
         var blockInfos = GetComponentsInChildren<BlockInfo>();
 
@@ -35,10 +35,10 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         {
             var pos = item.transform.position;  // 블록들의 위치 값 저장
             Vector2Int intPos = new Vector2Int((int)pos.x, (int)pos.z); // 블록들의 x,z 좌표 저장
-            map[intPos] = (int)item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장
+            map[intPos] = item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장
         }
-        playerPos.x = (int)player.position.x;   // 플레이어의 위치 저장
-        playerPos.y = (int)player.position.z;
+        playerPos.x = Mathf.RoundToInt(player.position.x);   // 플레이어의 위치 저장
+        playerPos.y = Mathf.RoundToInt(player.position.z);
 
         // 길 찾아주는 로직을 활용하여 길을 찾자
         List<Vector2Int> path = PathFinding2D.find4(playerPos, goalPos, map, passableValues);
