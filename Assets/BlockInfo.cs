@@ -36,7 +36,7 @@ public class BlockInfo : MonoBehaviour
             return;
         }
         // clickDistance보다 작으면 GroundManager의 OnTouch함수를 실행하자
-        GroundManager.Instance.OnTouch(transform.position);
+        Player.SelectPlayer.OnTouch(transform.position);
     }
 
     string debugTextPrefab = "DebugTextPrefab";
