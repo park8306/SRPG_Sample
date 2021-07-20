@@ -104,7 +104,7 @@ public static class PathFinding2D
     }
 
     static bool findDest(Node currentNode, List<Node> openList,
-                         Dictionary<Vector2Int, BlockType> map, Vector2Int to, out Node finalNode, BlockType passableValues,
+                         Dictionary<Vector2Int, BlockType> map, Vector2Int to, out Node finalNode, BlockType PassableValues,
                       Func<Vector2Int, Vector2Int, float> getDistance, Func<Vector2Int, List<Vector2Int>> getNeighbors)
     {
         if (currentNode == null) {
@@ -121,13 +121,13 @@ public static class PathFinding2D
 
         foreach (var item in getNeighbors(currentNode.pos))
         {
-            if (map.ContainsKey(item) && passableValues.HasFlag(map[item]))
+            if (map.ContainsKey(item) && PassableValues.HasFlag(map[item]))
             {
                 findTemp(openList, currentNode, item, to, getDistance);
             }
         }
         var next = openList.FindAll(obj => obj.open).Min();
-        return findDest(next, openList, map, to, out finalNode, passableValues, getDistance, getNeighbors);
+        return findDest(next, openList, map, to, out finalNode, PassableValues, getDistance, getNeighbors);
     }
 
     static void findTemp(List<Node> openList, Node currentNode, Vector2Int from, Vector2Int to, Func<Vector2Int, Vector2Int, float> getDistance)

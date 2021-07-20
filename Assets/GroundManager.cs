@@ -2,12 +2,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class GroundManager : SingletonMonoBehavior<GroundManager>
 {
     public Vector2Int playerPos;
-    public Dictionary<Vector2Int, BlockType> map = new Dictionary<Vector2Int, BlockType>();
+
+
+    public Dictionary<Vector2Int, BlockType> map = new Dictionary<Vector2Int, BlockType>(); // A*에서 사용
+    public Dictionary<Vector2Int, BlockInfo> blockInfoMap = new Dictionary<Vector2Int, BlockInfo>(); // A*에서 사용
 
     internal void OnTouch(Vector3 position)
     {
@@ -20,22 +24,49 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     // Start is called before the first frame update
     public Transform player;
 
-    void FindPath(Vector2Int goalPos)
+    public bool useDebugMode = false;
+    public GameObject debugTextPrefab;
+
+    new private void Awake()
     {
-        StopAllCoroutines();
-        StartCoroutine(FindPathCo(goalPos));
-    }
-    IEnumerator FindPathCo(Vector2Int goalPos)
-    { 
-
+        base.Awake();
         var blockInfos = GetComponentsInChildren<BlockInfo>();
-
+        debugTextGos.ForEach(x => Destroy(x));  // 블럭에 기존에 있던 디버그용 텍스트 삭제
+        debugTextGos.Clear();
         foreach (var item in blockInfos)
         {
             var pos = item.transform.position;  // 블록들의 위치 값 저장
             Vector2Int intPos = new Vector2Int((int)pos.x, (int)pos.z); // 블록들의 x,z 좌표 저장
             map[intPos] = item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장
+
+            if (useDebugMode)
+            {
+                item.UpdateDebugINfo();
+            }
+            blockInfoMap[intPos] = item;
+            //StringBuilder debugText = new StringBuilder();
+            ////ContainingText(debugText, item, BlockType.Walkable);
+            //ContainingText(debugText, item, BlockType.Water);
+            //ContainingText(debugText, item, BlockType.Player);
+            //ContainingText(debugText, item, BlockType.Monster);
+
+            //GameObject textMeshGo = Instantiate(debugTextPrefab, item.transform);
+            //debugTextGos.Add(textMeshGo);
+            //textMeshGo.transform.localPosition = Vector3.zero;
+            //TextMesh textMesh = textMeshGo.GetComponentInChildren<TextMesh>();
+            //textMesh.text = debugText.ToString();
         }
+    }
+
+    void FindPath(Vector2Int goalPos)
+    {
+        StopAllCoroutines();
+        StartCoroutine(FindPathCo(goalPos));
+    }
+
+    public List<GameObject> debugTextGos = new List<GameObject>();
+    IEnumerator FindPathCo(Vector2Int goalPos)
+    { 
         playerPos.x = Mathf.RoundToInt(player.position.x);   // 플레이어의 위치 저장
         playerPos.y = Mathf.RoundToInt(player.position.z);
 
@@ -71,6 +102,32 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
             FollowTarget.Instance.SetTarget(null);
         }
     }
+
+    private void ContainingText(StringBuilder sb, BlockInfo item, BlockType walkable)
+    {
+        if (item.blockType.HasFlag(walkable))
+        {
+            sb.AppendLine(walkable.ToString());
+        }
+    }
+
     public Ease moveEase = Ease.Linear;
     public float moveTimePerUnit = 0.3f;
+
+    internal void AddBlockInfo(Vector3 position, BlockType addBlockType)
+    {
+        Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
+        if (map.ContainsKey(pos) == false)
+        {
+            Debug.LogError($"{pos} 위치에 맵이 없다");
+        }
+
+        //map[pos] = map[pos] | addBlockType;
+        map[pos] |= addBlockType;
+        blockInfoMap[pos].blockType |= addBlockType;
+        if (useDebugMode)
+        {
+            blockInfoMap[pos].UpdateDebugINfo();
+        }
+    }
 }

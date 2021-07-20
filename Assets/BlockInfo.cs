@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 [Flags]
@@ -36,5 +37,32 @@ public class BlockInfo : MonoBehaviour
         }
         // clickDistance보다 작으면 GroundManager의 OnTouch함수를 실행하자
         GroundManager.Instance.OnTouch(transform.position);
+    }
+
+    string debugTextPrefab = "DebugTextPrefab";
+    GameObject debugTextGos;
+    internal void UpdateDebugINfo()
+    {
+        if (debugTextGos == null)
+        {
+            GameObject textMeshGo = Instantiate((GameObject)Resources.Load(debugTextPrefab), transform);
+            debugTextGos = textMeshGo;
+            textMeshGo.transform.localPosition = Vector3.zero;
+        }
+
+        StringBuilder debugText = new StringBuilder();
+        //ContainingText(debugText, item, BlockType.Walkable);
+        ContainingText(debugText, BlockType.Water);
+        ContainingText(debugText, BlockType.Player);
+        ContainingText(debugText, BlockType.Monster);
+
+        GetComponentInChildren<TextMesh>().text = debugText.ToString();
+    }
+    private void ContainingText(StringBuilder sb, BlockType walkable)
+    {
+        if (blockType.HasFlag(walkable))
+        {
+            sb.AppendLine(walkable.ToString());
+        }
     }
 }
