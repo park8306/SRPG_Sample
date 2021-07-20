@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Flags]
+// 비트 마스크?
 public enum BlockType
 {
     None        = 0,

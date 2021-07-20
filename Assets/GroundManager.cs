@@ -14,7 +14,8 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         Vector2Int findPos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
         FindPath(findPos);
     }
-
+    // 지나갈 수 있는 타입을 미리 저장해 맵 정보에 사용할 수 있도록 하자. 전의 코드는 int형으로 저장을 했었다
+    // Walkable 과 Water(둘중 하나라도? 아마 "|" 때문에)로 지정된 블록은 지나다닐 수 있는 블록이다.
     public BlockType passableValues = BlockType.Walkable | BlockType.Water;
     // Start is called before the first frame update
     public Transform player;
@@ -26,8 +27,6 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     }
     IEnumerator FindPathCo(Vector2Int goalPos)
     { 
-        //passableValues = new List<int>();
-        //passableValues.Add((int)BlockType.Walkable);    // 지나갈 수 있는 타입을 int형으로 변환하여 저장
 
         var blockInfos = GetComponentsInChildren<BlockInfo>();
 
