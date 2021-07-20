@@ -79,6 +79,8 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         }
         else
         {
+            // 원래 위치에선 플레이어 정보 삭제
+            RemoveBlockInfo(Player.SelectPlayer.transform.position, BlockType.Player);
             // 길이 있다면
             // 애니메이션 Walk를 실행
             Player.SelectPlayer.PlayAnimation("Walk");
@@ -100,8 +102,12 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
             Player.SelectPlayer.PlayAnimation("Idle");
             // null을 주어 카메라가 따라가지 않도록 하자
             FollowTarget.Instance.SetTarget(null);
+            // 이동한 위치에는 플레이어 정보 추가
+            AddBlockInfo(Player.SelectPlayer.transform.position, BlockType.Player);
         }
     }
+
+    
 
     private void ContainingText(StringBuilder sb, BlockInfo item, BlockType walkable)
     {
@@ -125,6 +131,22 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         //map[pos] = map[pos] | addBlockType;
         map[pos] |= addBlockType;
         blockInfoMap[pos].blockType |= addBlockType;
+        if (useDebugMode)
+        {
+            blockInfoMap[pos].UpdateDebugINfo();
+        }
+    }
+    private void RemoveBlockInfo(Vector3 position, BlockType removeBlockType)
+    {
+        Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
+        if (map.ContainsKey(pos) == false)
+        {
+            Debug.LogError($"{pos} 위치에 맵이 없다");
+        }
+
+        //map[pos] = map[pos] | addBlockType;
+        map[pos] &= ~removeBlockType;
+        blockInfoMap[pos].blockType &= ~removeBlockType;
         if (useDebugMode)
         {
             blockInfoMap[pos].UpdateDebugINfo();
