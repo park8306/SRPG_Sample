@@ -7,6 +7,6 @@ public class Monster : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Monster);   
+        GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Monster);
     }
 }

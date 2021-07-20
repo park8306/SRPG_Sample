@@ -11,7 +11,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
 
 
     public Dictionary<Vector2Int, BlockType> map = new Dictionary<Vector2Int, BlockType>(); // A*에서 사용
-    public Dictionary<Vector2Int, BlockInfo> blockInfoMap = new Dictionary<Vector2Int, BlockInfo>(); // A*에서 사용
+    public Dictionary<Vector2Int, BlockInfo> blockInfoMap = new Dictionary<Vector2Int, BlockInfo>(); // 맵 정보 에서 사용
 
     
     // 지나갈 수 있는 타입을 미리 저장해 맵 정보에 사용할 수 있도록 하자. 전의 코드는 int형으로 저장을 했었다
@@ -26,7 +26,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     new private void Awake()
     {
         base.Awake();
-        var blockInfos = GetComponentsInChildren<BlockInfo>();
+        var blockInfos = GetComponentsInChildren<BlockInfo>(); // 블록들의 정보들을 가져온 리스트
         debugTextGos.ForEach(x => Destroy(x));  // 블럭에 기존에 있던 디버그용 텍스트 삭제
         debugTextGos.Clear();
         foreach (var item in blockInfos)
@@ -35,11 +35,13 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
             Vector2Int intPos = new Vector2Int((int)pos.x, (int)pos.z); // 블록들의 x,z 좌표 저장
             map[intPos] = item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장
 
+            // GroundMaanger의 useDebugMode가 true라면
             if (useDebugMode)
             {
+                // 블록들의 UpdateDebugINfo를 실행시켜 3D Text에 정보를 넣어 활성화 하자
                 item.UpdateDebugINfo();
             }
-            blockInfoMap[intPos] = item;
+            blockInfoMap[intPos] = item;    // dictionary에 (블록들의 위치값, blockInfos(블록들의 정보)) 값을 넣어준다.
             //StringBuilder debugText = new StringBuilder();
             ////ContainingText(debugText, item, BlockType.Walkable);
             //ContainingText(debugText, item, BlockType.Water);
@@ -54,28 +56,17 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         }
     }
 
-    
-
+    // ...?? 이건 뭐징
     public List<GameObject> debugTextGos = new List<GameObject>();
-    
-
-    
-
-    private void ContainingText(StringBuilder sb, BlockInfo item, BlockType walkable)
-    {
-        if (item.blockType.HasFlag(walkable))
-        {
-            sb.AppendLine(walkable.ToString());
-        }
-    }
-
-   
 
     public void AddBlockInfo(Vector3 position, BlockType addBlockType)
     {
+        // 실행한 곳의 position 정보를 담고 있는 pos를 생성
         Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
+        // 만일 pos의 값이 map에 저장한 블록들의 위치와 일치하는게 없다면
         if (map.ContainsKey(pos) == false)
         {
+            // 로그를 발생
             Debug.LogError($"{pos} 위치에 맵이 없다");
         }
 
