@@ -149,11 +149,11 @@ public static class PathFinding2D
 
     class Node:IComparable
     {
-        public Node preNode;
-        public Vector2Int pos;
-        public float fScore;
-        public float hScore;
-        public float gScore;
+        public Node preNode; // 바로 전의 노드
+        public Vector2Int pos;  // 자기 위치
+        public float fScore;    // gScore + hScore
+        public float hScore;    // 예상 거리
+        public float gScore;    // Step, 몇번 째인지
         public bool open = true;
 
         public Node(Node prePos, Vector2Int pos, float hScore, float gScore)
@@ -175,7 +175,7 @@ public static class PathFinding2D
                 return this.fScore > temp.fScore ? 1 : -1;
             }
 
-            if (Mathf.Abs(this.hScore - temp.hScore) < 0.01f)
+            if (Mathf.Abs(this.hScore - temp.hScore) > 0.01f)
             {
                 return this.hScore > temp.hScore ? 1 : -1;
             }
