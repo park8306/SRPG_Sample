@@ -60,7 +60,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     public List<GameObject> debugTextGos = new List<GameObject>();
 
     // 블록에 추가로 타입을 넣어주기위한 함수
-    public void AddBlockInfo(Vector3 position, BlockType addBlockType)
+    public void AddBlockInfo(Vector3 position, BlockType addBlockType, Actor actor)
     {
         // 실행한 곳의 position 정보를 담고 있는 pos를 생성
         Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
@@ -75,6 +75,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         // 맵 정보를 담고있는 dictionary에 AddBlockInfo를 실행한 블록의 블록타입을 넣어주자
         map[pos] |= addBlockType;
         blockInfoMap[pos].blockType |= addBlockType;
+        blockInfoMap[pos].actor = actor;
         // 디버그용 텍스트를 띄우기 위해서 사용
         if (useDebugMode)
         {

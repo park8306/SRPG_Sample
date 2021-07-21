@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Player : MonoBehaviour
+public class Player : Actor
 {
     static public Player SelectPlayer;
     Animator animator;
@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
         SelectPlayer = this;
         animator = GetComponentInChildren<Animator>();
         // 플레이어가 서 있는 블록은 처음에 타입이 walkable밖에 설정되어있지 않다. AddBlockInfo를 실행하여 플레이어의 타입도 넣어주자
-        GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Player);
+        GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Player, this);
     }
 
     public void PlayAnimation(string nodeName)

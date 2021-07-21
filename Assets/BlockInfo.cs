@@ -78,6 +78,7 @@ public class BlockInfo : MonoBehaviour
     Renderer m_Renderer;
     private Color m_MouseOverColor = Color.red;
     private Color m_OriginalColor;
+    internal Actor actor;
 
     private void Awake()
     {
