@@ -74,4 +74,23 @@ public class BlockInfo : MonoBehaviour
             sb.AppendLine(walkable.ToString());
         }
     }
+
+    Renderer m_Renderer;
+    private Color m_MouseOverColor = Color.red;
+    private Color m_OriginalColor;
+
+    private void Awake()
+    {
+        m_Renderer = GetComponentInChildren<Renderer>();
+        m_OriginalColor = m_Renderer.material.color;
+    }
+    void OnMouseOver()
+    {
+        m_Renderer.material.color = m_MouseOverColor;
+    }
+
+    void OnMouseExit()
+    {
+        m_Renderer.material.color = m_OriginalColor;
+    }
 }
