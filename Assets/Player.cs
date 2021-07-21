@@ -56,6 +56,8 @@ public class Player : Actor
             Player.SelectPlayer.PlayAnimation("Walk");
             // FollowTarget의 SetTarget을 실행시켜 선택된 캐릭터를 카메라가 따라가게 하자
             FollowTarget.Instance.SetTarget(Player.SelectPlayer.transform);
+            // 경로의 첫 지점의 자신의 지점이니 없애주자
+            path.RemoveAt(0);
             // path에 저장되어있는 위치를 하나씩 불러와 이동 시키자
             foreach (var item in path)
             {
@@ -76,6 +78,23 @@ public class Player : Actor
             GroundManager.Instance.AddBlockInfo(Player.SelectPlayer.transform.position, BlockType.Player,this);
         }
     }
+    // 이거는 아직 사용하는 곳이 없다
+    internal bool OnMoveable(Vector3 position)
+    {
+        Vector2Int goalPos = position.ToVector2Int();
+        Vector2Int playerPos = transform.position.ToVector2Int();
+        var map = GroundManager.Instance.map;
+        var path = PathFinding2D.find4(playerPos, goalPos, map, passableValues);
+        if (path.Count == 0)
+            Debug.Log("길 업따 !");
+        else if (path.Count > 5)
+            Debug.Log("이동모태 !");
+        else
+            return true;
+
+        return false;
+    }
+
     public Ease moveEase = Ease.Linear;
     public float moveTimePerUnit = 0.3f;
 }

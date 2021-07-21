@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ActorStausUI : SingletonMonoBehavior<ActorStausUI>
+public class ActorStatusUI : SingletonMonoBehavior<ActorStatusUI>
 {
     Text status;
     Text nickName; 
@@ -19,7 +19,9 @@ public class ActorStausUI : SingletonMonoBehavior<ActorStausUI>
 
     internal void Show(Actor actor)
     {
+        // 부모의 Show 함수는 아마도 오브젝트 활성화 비활성화를 시켜주는거 같다...?
         base.Show();
+        // 블록이 플레이어의 정보를 받았고 블록에 마우스가 올라가있으면 플레이어 정보를 UI에 띄워준다.
         status = transform.Find("Status").GetComponent<Text>();
         nickName = transform.Find("Name").GetComponent<Text>();
 
@@ -44,6 +46,7 @@ public class ActorStausUI : SingletonMonoBehavior<ActorStausUI>
         hPBarGauge.sizeDelta = size;
         hPBar.sizeDelta = size;
 
+        // UI에 플레이어의 현재 HP나 MP만큼 BarGaugeImage를 조정
         mPBarGaugeImage.fillAmount = actor.mp / actor.maxMp;
         hPBarGaugeImage.fillAmount = actor.hp / actor.maxHp;
 

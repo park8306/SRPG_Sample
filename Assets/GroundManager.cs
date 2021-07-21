@@ -5,6 +5,20 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
+// 확장 메서드 생성
+static public class GroundExtention
+{
+    
+    static public Vector2Int ToVector2Int(this Vector3 v3)
+    {
+        return new Vector2Int(Mathf.RoundToInt(v3.x), Mathf.RoundToInt(v3.z));
+    }
+    static public Vector3 ToVector2Int(this Vector2Int v2Int, int y)
+    {
+        return new Vector3(v2Int.x, y, v2Int.y);
+    }
+}
+
 public class GroundManager : SingletonMonoBehavior<GroundManager>
 {
     public Vector2Int playerPos;
@@ -32,8 +46,10 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         foreach (var item in blockInfos)
         {
             var pos = item.transform.position;  // 블록들의 위치 값 저장
-            Vector2Int intPos = new Vector2Int((int)pos.x, (int)pos.z); // 블록들의 x,z 좌표 저장
-            map[intPos] = item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장
+
+            // 블록들의 x,z 좌표 저장
+            Vector2Int intPos = pos.ToVector2Int();
+            map[intPos] = item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장, map에는 모든 블록들의 정보가 있다
 
             // GroundMaanger의 useDebugMode가 true라면
             if (useDebugMode)
@@ -83,6 +99,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         //map[pos] = map[pos] | addBlockType;
         map[pos] &= ~removeBlockType;
         blockInfoMap[pos].blockType &= ~removeBlockType;
+        blockInfoMap[pos].actor = null;
         if (useDebugMode)
         {
             blockInfoMap[pos].UpdateDebugINfo();

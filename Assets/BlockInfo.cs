@@ -17,6 +17,7 @@ public enum BlockType
 public class BlockInfo : MonoBehaviour
 {
     public BlockType blockType;
+    public Actor actor;
 
     Vector3 downMousePosition;
     public float clickDistance = 1;
@@ -35,8 +36,33 @@ public class BlockInfo : MonoBehaviour
         {
             return;
         }
+        // 선택한 블록이 actor가 있고 actor가 Player라면
+        if (actor && actor == Player.SelectPlayer)
+        {
+            // 플레이어가 이동 가능한 영역을 보여주자
+            ShowMoveDistance(actor.moveDistance);
+        }
+        else
+        {
+            Player.SelectPlayer.OnTouch(transform.position);
+        }
         // clickDistance보다 작으면 Player의 OnTouch함수를 실행하자
-        Player.SelectPlayer.OnTouch(transform.position);
+        
+    }
+
+    private void ShowMoveDistance(int moveDistance)
+    {
+
+        //Vector2Int currentPos = transform.position.ToVector2Int();
+        // 쓸모 없음
+        Quaternion rotate = Quaternion.Euler(0, 45, 0);
+        // 블록의 위치로부터 플레이어가 이동가능한 영역의 충돌체들을 가져옴
+        var blocks = Physics.OverlapSphere(transform.position, moveDistance);
+        foreach (var item in blocks)
+        {
+            // 충돌체들의 블록들 색을 레드로 바꿔주자
+            item.GetComponent<BlockInfo>()?.ToChangeRedColor();
+        }
     }
 
     string debugTextPrefab = "DebugTextPrefab"; // 리소스에서 생성할 DebugTextPrefab의 이름 저장
@@ -67,7 +93,8 @@ public class BlockInfo : MonoBehaviour
     // 3d 텍스트에 자신의 blockType 정보를 넣어주는 함수
     private void ContainingText(StringBuilder sb, BlockType walkable)
     {
-        // 만약 block의 BlockType과 walkable이 같은 타입이라면
+        // 만약 block의 BlockType이 텍스트에 추가할 walkable을 가지고 있다면
+        // (플레이어가 있는 블록은 처음에는 Walkable만 가지고 있지만 AddBlockInfo함수를 통해서 blockType에 Player를 넣어줬다)
         if (blockType.HasFlag(walkable))
         {
             // debugText에 값을 넣어준다.
@@ -78,24 +105,38 @@ public class BlockInfo : MonoBehaviour
     Renderer m_Renderer;
     private Color m_MouseOverColor = Color.red;
     private Color m_OriginalColor;
-    internal Actor actor;
 
     private void Awake()
     {
+        // 블록의 렌더 정보를 블러옴
         m_Renderer = GetComponentInChildren<Renderer>();
+        // 블록의 오리지널 칼라를 저장
         m_OriginalColor = m_Renderer.material.color;
     }
+
+    // 마우스가 블록에 들어 오면 실행
     void OnMouseOver()
     {
-        m_Renderer.material.color = m_MouseOverColor;
+        ToChangeRedColor();
         if (actor)
         {
-            ActorStausUI.Instance.Show(actor);
+            ActorStatusUI.Instance.Show(actor);
         }
     }
 
+    // 렌더러가 가지고 있는 메테리얼의 color값이 바뀜
+    private void ToChangeRedColor()
+    {
+        m_Renderer.material.color = m_MouseOverColor;
+    }
+
+    // 마우스가 블록을 빠져 나가면 실행
     void OnMouseExit()
     {
         m_Renderer.material.color = m_OriginalColor;
+        if (actor)
+        {
+            ActorStatusUI.Instance.Close();
+        }
     }
 }

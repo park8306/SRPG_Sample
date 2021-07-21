@@ -10,14 +10,17 @@ public enum StatusType
     Die,
 }
 
+// Player와 Monster는 기본적인 정보를 가지고 있는다
 public class Actor : MonoBehaviour
 {
-    public string nickName; // 몬스터의 이름
-    public float hp;
-    public float mp;
-    public float maxHp;
-    public float maxMp;
+    public string nickName = "이름 입력해주세요"; // 몬스터의 이름
+    public float hp = 20;
+    public float mp = 20;
+    public float maxHp = 20;
+    public float maxMp = 20;
     public StatusType status;
+
+    public int moveDistance = 5;
 }
 
 public class Monster : Actor
