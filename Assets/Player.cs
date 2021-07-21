@@ -73,7 +73,7 @@ public class Player : Actor
             // null을 주어 카메라가 따라가지 않도록 하자
             FollowTarget.Instance.SetTarget(null);
             // 이동한 위치에는 플레이어 정보 추가
-            GroundManager.Instance.AddBlockInfo(Player.SelectPlayer.transform.position, BlockType.Player);
+            GroundManager.Instance.AddBlockInfo(Player.SelectPlayer.transform.position, BlockType.Player,this);
         }
     }
     public Ease moveEase = Ease.Linear;

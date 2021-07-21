@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum StatusType
 {
@@ -11,15 +12,16 @@ public enum StatusType
 
 public class Actor : MonoBehaviour
 {
-
+    public string nickName; // 몬스터의 이름
+    public float hp;
+    public float mp;
+    public float maxHp;
+    public float maxMp;
+    public StatusType status;
 }
 
 public class Monster : Actor
 {
-    public string nickName; // 몬스터의 이름
-    public float hp;
-    public float mp;
-    public StatusType status;
     // Start is called before the first frame update
     Animator animator;
     void Start()

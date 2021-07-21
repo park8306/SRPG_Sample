@@ -42,17 +42,6 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
                 item.UpdateDebugINfo();
             }
             blockInfoMap[intPos] = item;    // dictionary에 (블록들의 위치값, blockInfos(블록들의 정보)) 값을 넣어준다.
-            //StringBuilder debugText = new StringBuilder();
-            ////ContainingText(debugText, item, BlockType.Walkable);
-            //ContainingText(debugText, item, BlockType.Water);
-            //ContainingText(debugText, item, BlockType.Player);
-            //ContainingText(debugText, item, BlockType.Monster);
-
-            //GameObject textMeshGo = Instantiate(debugTextPrefab, item.transform);
-            //debugTextGos.Add(textMeshGo);
-            //textMeshGo.transform.localPosition = Vector3.zero;
-            //TextMesh textMesh = textMeshGo.GetComponentInChildren<TextMesh>();
-            //textMesh.text = debugText.ToString();
         }
     }
 

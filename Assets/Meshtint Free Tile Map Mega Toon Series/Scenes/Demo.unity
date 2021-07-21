@@ -16226,6 +16226,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd8375951b201264baf6f80a697712c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nickName: "\uB808\uC628"
+  hp: 60
+  mp: 20
+  maxHp: 60
+  maxMp: 20
+  status: 0
   passableValues: 3
   moveEase: 1
   moveTimePerUnit: 0.3
@@ -18139,6 +18145,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1094553964}
     m_Modifications:
+    - target: {fileID: 1182485926111667411, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Name
+      value: MPBarGauge
+      objectReference: {fileID: 0}
     - target: {fileID: 1418422937182332040, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -375
@@ -18146,6 +18156,18 @@ PrefabInstance:
     - target: {fileID: 1418422937182332040, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -345.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 1613647344130629622, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Name
+      value: HPBarGauge
+      objectReference: {fileID: 0}
+    - target: {fileID: 1795491700339744109, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1795491700339744109, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -50.000042
       objectReference: {fileID: 0}
     - target: {fileID: 2112884810882318263, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_SizeDelta.x
@@ -18163,6 +18185,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -260.8985
       objectReference: {fileID: 0}
+    - target: {fileID: 2600883044760485747, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Name
+      value: MPBarBG
+      objectReference: {fileID: 0}
     - target: {fileID: 2732442646698969288, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -300
@@ -18178,6 +18204,18 @@ PrefabInstance:
     - target: {fileID: 2775271432005701560, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -320.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2913089194040775946, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2913089194040775946, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -50.000042
+      objectReference: {fileID: 0}
+    - target: {fileID: 3778292594012900635, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Name
+      value: HPBarBG
       objectReference: {fileID: 0}
     - target: {fileID: 5732954618684108507, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -18197,11 +18235,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6453959882680409968, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_Name
-      value: ActorStateUI
+      value: ActorStausUI
       objectReference: {fileID: 0}
     - target: {fileID: 6453959882680409971, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6453959882680409971, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_Pivot.y
@@ -18265,7 +18303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6453959882680409971, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 6453959882680409971, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -18335,6 +18373,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -278.1
       objectReference: {fileID: 0}
+    - target: {fileID: 7373662856839755608, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7373662856839755608, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -50.000042
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427150079438613073, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8427150079438613073, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -50.000042
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
 --- !u!224 &1857186728 stripped
@@ -18342,6 +18396,24 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6453959882680409971, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
   m_PrefabInstance: {fileID: 1857186727}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1857186729 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6453959882680409968, guid: 5d4a8795980d82741ab8f0fd546cffbb, type: 3}
+  m_PrefabInstance: {fileID: 1857186727}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1857186730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1857186729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ab75a894de39f54b95d519c84ddfb87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  completeUiInite: 0
 --- !u!1001 &1858902984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21942,3 +22014,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87b5fe3b01a95a445b3cd0f1c5c1edd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nickName: "\uBAAC\uC2A4\uD130"
+  hp: 20
+  mp: 0
+  maxHp: 20
+  maxMp: 0
+  status: 0
