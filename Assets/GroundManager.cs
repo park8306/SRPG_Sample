@@ -59,6 +59,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     // ...?? 이건 뭐징
     public List<GameObject> debugTextGos = new List<GameObject>();
 
+    // 블록에 추가로 타입을 넣어주기위한 함수
     public void AddBlockInfo(Vector3 position, BlockType addBlockType)
     {
         // 실행한 곳의 position 정보를 담고 있는 pos를 생성
@@ -71,13 +72,16 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         }
 
         //map[pos] = map[pos] | addBlockType;
+        // 맵 정보를 담고있는 dictionary에 AddBlockInfo를 실행한 블록의 블록타입을 넣어주자
         map[pos] |= addBlockType;
         blockInfoMap[pos].blockType |= addBlockType;
+        // 디버그용 텍스트를 띄우기 위해서 사용
         if (useDebugMode)
         {
             blockInfoMap[pos].UpdateDebugINfo();
         }
     }
+    // 블록에 추가된 타입을 제거시켜주는 함수, 위의 함수에서 타입만 빼준것
     public void RemoveBlockInfo(Vector3 position, BlockType removeBlockType)
     {
         Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));

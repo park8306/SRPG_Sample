@@ -35,7 +35,7 @@ public class BlockInfo : MonoBehaviour
         {
             return;
         }
-        // clickDistance보다 작으면 GroundManager의 OnTouch함수를 실행하자
+        // clickDistance보다 작으면 Player의 OnTouch함수를 실행하자
         Player.SelectPlayer.OnTouch(transform.position);
     }
 
