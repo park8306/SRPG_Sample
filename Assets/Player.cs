@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class Player : Actor
 {
-    static public Player SelectPlayer;
+    static public Player SelectedPlayer;
     Animator animator;
     
     // Start is called before the first frame update
     void Start()
     {
-        SelectPlayer = this;
+        //SelectedPlayer = this;
         animator = GetComponentInChildren<Animator>();
         // 플레이어가 서 있는 블록은 처음에 타입이 walkable밖에 설정되어있지 않다. AddBlockInfo를 실행하여 플레이어의 타입도 넣어주자
         GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Player, this);
@@ -51,12 +52,12 @@ public class Player : Actor
         else
         {
             // 원래 위치에선 플레이어 정보 삭제
-            GroundManager.Instance.RemoveBlockInfo(Player.SelectPlayer.transform.position, BlockType.Player);
+            GroundManager.Instance.RemoveBlockInfo(Player.SelectedPlayer.transform.position, BlockType.Player);
             // 길이 있다면
             // 애니메이션 Walk를 실행
-            Player.SelectPlayer.PlayAnimation("Walk");
+            Player.SelectedPlayer.PlayAnimation("Walk");
             // FollowTarget의 SetTarget을 실행시켜 선택된 캐릭터를 카메라가 따라가게 하자
-            FollowTarget.Instance.SetTarget(Player.SelectPlayer.transform);
+            FollowTarget.Instance.SetTarget(Player.SelectedPlayer.transform);
             // 경로의 첫 지점의 자신의 지점이니 없애주자
             path.RemoveAt(0);
             // path에 저장되어있는 위치를 하나씩 불러와 이동 시키자
@@ -72,13 +73,48 @@ public class Player : Actor
                 yield return new WaitForSeconds(moveTimePerUnit);
             }
             // 이동이 끝나면 Idle애니메이션을 실행시키자
-            Player.SelectPlayer.PlayAnimation("Idle");
+            Player.SelectedPlayer.PlayAnimation("Idle");
             // null을 주어 카메라가 따라가지 않도록 하자
             FollowTarget.Instance.SetTarget(null);
             // 이동한 위치에는 플레이어 정보 추가
-            GroundManager.Instance.AddBlockInfo(Player.SelectPlayer.transform.position, BlockType.Player,this);
+            GroundManager.Instance.AddBlockInfo(Player.SelectedPlayer.transform.position, BlockType.Player,this);
         }
     }
+
+    internal void ShowAttackableArea()
+    {
+        Vector2Int currentPos = transform.position.ToVector2Int();
+
+        var map = GroundManager.Instance.blockInfoMap;
+
+        // 공격 가능한 지역에 적이 있는지 확인하자.
+        foreach (var item in attackablePoints)
+        {
+            Vector2Int pos = item + currentPos; // item의 월드 지역 위치
+            //if(item) 지역에 적이 있는가?
+            if (map.ContainsKey(pos))
+            {
+                if (IsEnemyExist(map[pos]))
+                {
+                    map[pos].ToChangeColor(Color.red);
+                }
+            }
+        }
+    }
+
+    private bool IsEnemyExist(BlockInfo blockInfo)
+    {
+        if (blockInfo.actor == null)
+        {
+            return false;
+        }
+        if (blockInfo.blockType.HasFlag(BlockType.Monster) == false)
+        {
+            return false;
+        }
+        return true;
+    }
+
     // 이거는 아직 사용하는 곳이 없다
     internal bool OnMoveable(Vector3 position, float maxDistance)
     {

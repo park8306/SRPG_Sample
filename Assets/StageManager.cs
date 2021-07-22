@@ -1,0 +1,28 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum GameStateType
+{
+    NotInit,                // 아직 초기화 되지 않음
+    SelectPlayer,           // 조정할 아군 선택,
+    SelectBlockToMoveOrAttackTarget,  // 이동혹은 공격 타겟을 선택
+    IngPlayerMode,          // 플레이어 이동 중
+    SelectToAttackTarget,   // 이동 후에 공격할 타겟을 선택.
+    AttackToTarget,         // 모든 플레이어 선택했다면 MonsterTurn을 진행 시킨다.
+    MonsterTurn,
+}
+
+public class StageManager : SingletonMonoBehavior<StageManager>
+{
+    [SerializeField] GameStateType gameState;
+    static public GameStateType GameState
+    {
+        get => Instance.gameState;
+        set => Instance.gameState = value;
+    }
+    void Start()
+    {
+        
+    }
+}

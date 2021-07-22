@@ -37,19 +37,79 @@ public class BlockInfo : MonoBehaviour
         {
             return;
         }
+
+        switch (StageManager.GameState)
+        {
+            case GameStateType.SelectPlayer:
+                SelectPlayer();
+                break;
+            case GameStateType.SelectBlockToMoveOrAttackTarget:
+                SelectBlockToMoveOrAttackTarget();
+                break;
+            case GameStateType.SelectToAttackTarget:
+                SelectToAttackTarget();
+                break;
+            case GameStateType.AttackToTarget:
+                AttackToTarget();
+                break;
+            case GameStateType.NotInit:
+            case GameStateType.IngPlayerMode:
+            case GameStateType.MonsterTurn:
+                break;
+        }
+        // 이미 빨간 블럭 상태일 때 다시 선택하면 빨간 블럭을 원상 복귀 시켜라
+        // 지금 블럭에 몬스터 있으면 때리자
         // 선택한 블록이 actor가 있고 actor가 Player라면
-        if (actor && actor == Player.SelectPlayer)
-        {
-            // 플레이어가 이동 가능한 영역을 보여주자
-            ShowMoveDistance(actor.moveDistance);
-        }
-        else
-        {
-            Player.SelectPlayer.OnTouch(transform.position);
-        }
+        //if (actor && actor == Player.SelectedPlayer)
+        //{
+        //    // 플레이어가 이동 가능한 영역을 보여주자
+        //    ShowMoveDistance(actor.moveDistance);
+        //}
+        //else
+        //{
+        //    Player.SelectedPlayer.OnTouch(transform.position);
+        //}
         // clickDistance보다 작으면 Player의 OnTouch함수를 실행하자
-        
+
     }
+
+    private void AttackToTarget()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void SelectToAttackTarget()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void SelectBlockToMoveOrAttackTarget()
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void SelectPlayer()
+    {
+        if (actor == null)
+        {
+            return;
+        }
+        if (actor.GetType() == typeof(Player))
+        {
+            Player.SelectedPlayer = (Player)actor;
+
+            // 이동 가능한 영역 표시
+            ShowMoveDistance(Player.SelectedPlayer.moveDistance);
+
+            // 현재 위치에서 공격 가능한 영역 표시.
+            Player.SelectedPlayer.ShowAttackableArea();
+            StageManager.GameState = GameStateType.SelectBlockToMoveOrAttackTarget;
+        }
+    }
+
     private void ClearMoveableArea()
     {
         highLightedMoveableArea.ForEach(x => x.ToChangeOriginalColor());
@@ -76,17 +136,19 @@ public class BlockInfo : MonoBehaviour
         foreach (var item in blocks)
         {
             //조건이 맞는 블록들의 색을 변하게 하자
-            if (Player.SelectPlayer.OnMoveable(item.transform.position, moveDistance))
+            if (Player.SelectedPlayer.OnMoveable(item.transform.position, moveDistance))
             {
                 var block = item.GetComponent<BlockInfo>();
                 if (block)
                 {
-                    block.ToChangeRedColor();
+                    block.ToChangeBlueColor();
                     highLightedMoveableArea.Add(block);
                 }
             }
         }
     }
+
+    
 
     string debugTextPrefab = "DebugTextPrefab"; // 리소스에서 생성할 DebugTextPrefab의 이름 저장
     GameObject debugTextGos;    // DebugTextPrefab를 생성해서 게임오브젝트로 저장할 변수
@@ -130,7 +192,7 @@ public class BlockInfo : MonoBehaviour
     }
 
     Renderer m_Renderer;
-    private Color m_MouseOverColor = Color.red;
+    private Color moveableColor = Color.blue;
     private Color m_OriginalColor;
 
     private void Awake()
@@ -152,13 +214,17 @@ public class BlockInfo : MonoBehaviour
     }
 
     // 렌더러가 가지고 있는 메테리얼의 color값이 바뀜
-    private void ToChangeRedColor()
+    public void ToChangeBlueColor()
     {
-        m_Renderer.material.color = m_MouseOverColor;
+        m_Renderer.material.color = moveableColor;
     }
-    private void ToChangeOriginalColor()
+    public void ToChangeOriginalColor()
     {
         m_Renderer.material.color = m_OriginalColor;
+    }
+    internal void ToChangeColor(Color color)
+    {
+        m_Renderer.material.color = color;
     }
 
     // 마우스가 블록을 빠져 나가면 실행
