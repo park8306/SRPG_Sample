@@ -17,6 +17,7 @@ public class Player : Actor
         animator = GetComponentInChildren<Animator>();
         // 플레이어가 서 있는 블록은 처음에 타입이 walkable밖에 설정되어있지 않다. AddBlockInfo를 실행하여 플레이어의 타입도 넣어주자
         GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Player, this);
+        // 처음 시작할 때 플레이어 쪽으로 카메라를 옮기자
         FollowTarget.Instance.SetTarget(transform);
     }
 
@@ -80,9 +81,9 @@ public class Player : Actor
             // 이동한 위치에는 플레이어 정보 추가
             GroundManager.Instance.AddBlockInfo(Player.SelectedPlayer.transform.position, BlockType.Player,this);
 
-            bool existAttackTarget = ShowAttackableArea();
-            if (existAttackTarget)
-            {
+            bool existAttackTarget = ShowAttackableArea(); // 공격 범위에 적이 있는가
+            if (existAttackTarget) // 있으면
+            {   // 게임상태를 GameStateType.SelectToAttackTarget로 바꾼다
                 StageManager.GameState = GameStateType.SelectToAttackTarget;
             }
             else
@@ -119,51 +120,56 @@ public class Player : Actor
     internal bool ShowAttackableArea()
     {
         bool existEnemy = false;
+        // 선택된 캐릭터의 현재 위치가 저장된다
         Vector2Int currentPos = transform.position.ToVector2Int();
 
         var map = GroundManager.Instance.blockInfoMap;
 
-        // 공격 가능한 지역에 적이 있는지 확인하자.
+        // 공격 가능한 지역에 적이 있는지 확인하자., 모든 공격 위치에 몬스터가 있는지 확인한다
         foreach (var item in attackablePoints)
         {
+            // 캐릭터의 원래위치 + 로컬위치니 월드 지역 위치가 된다
             Vector2Int pos = item + currentPos; // item의 월드 지역 위치
-            //if(item) 지역에 적이 있는가?
-            if (map.ContainsKey(pos))
+            if (map.ContainsKey(pos))   // 맵 정보에 공격 지역 위치의 블록 정보가 들어있는가
             {
-                if (IsEnemyExist(map[pos]))
+                if (IsEnemyExist(map[pos])) // 공격 범위에 적(몬스터)가 있는가?
                 {
-                    map[pos].ToChangeColor(Color.red);
-                    existEnemy = true;
+                    map[pos].ToChangeColor(Color.red);  // 있으면 해당 위치의 블록 색을 바꾸자
+                    existEnemy = true;  // 적이 있다
                 }
             }
         }
         return existEnemy;
     }
-
+    // 몬스터가 있는가
     private bool IsEnemyExist(BlockInfo blockInfo)
     {
+        // 블록에 캐릭터나 몬스터가 없다
         if (blockInfo.actor == null)
         {
             return false;
         }
-        if (blockInfo.blockType.HasFlag(BlockType.Monster) == false)
+        if (blockInfo.blockType.HasFlag(BlockType.Monster) == false) // 블록 정보에 몬스터가 없다
         {
             return false;
         }
         return true;
     }
 
-    // 이거는 아직 사용하는 곳이 없다
+    // 블록의 위치와 최대 거리를 입력받아 움직일 수 있는 거리를 표시하자
     internal bool OnMoveable(Vector3 position, float maxDistance)
     {
         Vector2Int goalPos = position.ToVector2Int();
         Vector2Int playerPos = transform.position.ToVector2Int();
         // map은 그냥 모든 블록의 값을 가지고 있다
         var map = GroundManager.Instance.blockInfoMap;
-        // 플레이어로부터 모든 블록의 경로들을 path가 가지고 있다.
+        // 블록들의 정보를 이용해 해당 블록과 플레이어의 경로를 찾는다
         var path = PathFinding2D.find4(playerPos, goalPos, (Dictionary<Vector2Int, BlockInfo>)map, passableValues);
         if (path.Count == 0)
             Debug.Log("길 업따 !");
+        // 만약 maxDistance보다 경로의 수가 많으면 이동 못한다고 로그를 띄워준다.
+        // 여기서 +1을 해주는 이유는 처음 경로는 자기 자신이기 때문이다(?)
+        // 만약 path.Count가 6이라면 자기자신의 경로도 포함이 되기 때문에 최대 갈 수 있는 거리는 5가된다.
         else if (path.Count > maxDistance+1)
             Debug.Log("이동모태 !");
         else

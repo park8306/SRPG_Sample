@@ -24801,7 +24801,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.y
@@ -24809,7 +24809,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalRotation.w
@@ -24934,12 +24934,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nickName: "\uBAAC\uC2A4\uD130"
   iconName: Monster
+  power: 10
   hp: 20
   mp: 0
   maxHp: 20
   maxMp: 0
   status: 0
   moveDistance: 5
+  attackablePoints: []
 --- !u!114 &6574403386854249911
 MonoBehaviour:
   m_ObjectHideFlags: 0

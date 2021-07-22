@@ -38,9 +38,11 @@ public class BlockInfo : MonoBehaviour
             return;
         }
 
+        // 처음 StageManager.GameState 상태는 SelectPlayer이다.
+        // 조건에 맞는 함수들을 실행 시켜 주자
         switch (StageManager.GameState)
         {
-            case GameStateType.SelectPlayer:
+            case GameStateType.SelectPlayer:    // Player를 선택할 상태라면
                 SelectPlayer();
                 break;
             case GameStateType.SelectBlockToMoveOrAttackTarget:
@@ -57,20 +59,6 @@ public class BlockInfo : MonoBehaviour
             case GameStateType.MonsterTurn:
                 break;
         }
-        // 이미 빨간 블럭 상태일 때 다시 선택하면 빨간 블럭을 원상 복귀 시켜라
-        // 지금 블럭에 몬스터 있으면 때리자
-        // 선택한 블록이 actor가 있고 actor가 Player라면
-        //if (actor && actor == Player.SelectedPlayer)
-        //{
-        //    // 플레이어가 이동 가능한 영역을 보여주자
-        //    ShowMoveDistance(actor.moveDistance);
-        //}
-        //else
-        //{
-        //    Player.SelectedPlayer.OnTouch(transform.position);
-        //}
-        // clickDistance보다 작으면 Player의 OnTouch함수를 실행하자
-
     }
 
     private void AttackToTarget()
@@ -98,11 +86,11 @@ public class BlockInfo : MonoBehaviour
         }
         else
         {
-            if (highLightedMoveableArea.Contains(this))
+            if (highLightedMoveableArea.Contains(this))// 이동 가능한 영역에 포한되어있는 블록이면 이동 시키자
             {
-                Player.SelectedPlayer.MoveToPosition(transform.position);
-                ClearMoveableArea();
-                StageManager.GameState = GameStateType.IngPlayerMode;
+                Player.SelectedPlayer.MoveToPosition(transform.position);// 플레이어를 이동시키고
+                ClearMoveableArea();    // 이동가능영역 표시를 지워주자
+                StageManager.GameState = GameStateType.IngPlayerMode;   // 플레이어가 움직이는 중이라고 상태를 바꿔주자
             }
         }
     }
@@ -112,26 +100,26 @@ public class BlockInfo : MonoBehaviour
     /// </summary>
     private void SelectPlayer()
     {
-        if (actor == null)
-        {
-            return;
-        }
+        // 선택한 actor가 플레이어라면
         if (actor.GetType() == typeof(Player))
         {
+            // 플레이어의 정보를 넣어준다(캐릭터가 여러개라면 클릭한 캐릭터의 정보를 넣어준다)
             Player.SelectedPlayer = (Player)actor;
 
-            // 이동 가능한 영역 표시
+            // 선택한 캐릭터의 이동 가능한 영역 표시
             ShowMoveDistance(Player.SelectedPlayer.moveDistance);
 
-            // 현재 위치에서 공격 가능한 영역 표시.
+            // 선택한 캐릭터의 현재 위치에서 공격 가능한 영역 표시.
             Player.SelectedPlayer.ShowAttackableArea();
             StageManager.GameState = GameStateType.SelectBlockToMoveOrAttackTarget;
         }
     }
-
+    // 이동가능한 거리를 표시했던걸 원래 색으로 바꿔주자
     private void ClearMoveableArea()
     {
+        // 색을 바꾸고
         highLightedMoveableArea.ForEach(x => x.ToChangeOriginalColor());
+        // 리스트를 비워주자
         highLightedMoveableArea.Clear();
     }
 
@@ -145,7 +133,7 @@ public class BlockInfo : MonoBehaviour
         // 쓸모 없음
         Quaternion rotate = Quaternion.Euler(0, 45, 0);
         // 블록의 위치로부터 플레이어가 이동가능한 영역의 충돌체들을 가져옴
-        //var blocks = Physics.OverlapSphere(transform.position, moveDistance);
+        // halfExtents를 구하자, 0.99f는 살짝 작은 거리를 주기 위함이다
         Vector3 halfExtents = (moveDistance / Mathf.Sqrt(2)) * 0.99f * Vector3.one;
 
         // blocks는 플레이어에서부터 이동 가능한 거리까지의 블록들의 정보를 모아놨다
@@ -154,12 +142,13 @@ public class BlockInfo : MonoBehaviour
         // 이제 이 블록들을 가지고 이동 가능한 거리 표시를 해보자
         foreach (var item in blocks)
         {
-            //조건이 맞는 블록들의 색을 변하게 하자
+            // 이동 거리 조건이 맞는 블록들의 색을 변하게 하자
             if (Player.SelectedPlayer.OnMoveable(item.transform.position, moveDistance))
             {
                 var block = item.GetComponent<BlockInfo>();
                 if (block)
                 {
+                    // 블록의 색을 바꿔주고, 바꼈던 블록을 관리하기 위해 리스트에 넣어주자
                     block.ToChangeBlueColor();
                     highLightedMoveableArea.Add(block);
                 }

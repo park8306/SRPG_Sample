@@ -36,11 +36,13 @@ public class Actor : MonoBehaviour
     public List<Vector2Int> attackablePoints = new List<Vector2Int>();
     private void Awake()
     {
+        // 먼저 처음 지정한 공격범위를 가져오자
         var attackPoints = GetComponentsInChildren<AttackPoint>();
 
         // 앞쪽에 있는 공격 포인트
         foreach (var item in attackPoints)
         {
+            // 공격포인트가 위치한 로컬 위치 정보들을 가져온다.
             attackablePoints.Add(item.transform.localPosition.ToVector2Int());
         }
         // 오른쪽에 있는 공격 포인트
@@ -76,7 +78,7 @@ public class Monster : Actor
         GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Monster, this);
         animator = GetComponentInChildren<Animator>();
     }
-
+    // 피격 당할 시 실행
     internal override void TakeHit(int power)
     {
         hp -= power;
