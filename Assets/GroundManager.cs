@@ -13,9 +13,13 @@ static public class GroundExtention
     {
         return new Vector2Int(Mathf.RoundToInt(v3.x), Mathf.RoundToInt(v3.z));
     }
-    static public Vector3 ToVector2Int(this Vector2Int v2Int, int y)
+    static public Vector3 ToVector3(this Vector2Int v2Int, float y)
     {
         return new Vector3(v2Int.x, y, v2Int.y);
+    }
+    static public Vector3 ToVector3Snap(this Vector3 v3)
+    {
+        return new Vector3(Mathf.Round(v3.x), Mathf.Round(v3.y), Mathf.Round(v3.z));
     }
 }
 

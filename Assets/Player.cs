@@ -15,6 +15,7 @@ public class Player : Actor
         animator = GetComponentInChildren<Animator>();
         // 플레이어가 서 있는 블록은 처음에 타입이 walkable밖에 설정되어있지 않다. AddBlockInfo를 실행하여 플레이어의 타입도 넣어주자
         GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Player, this);
+        FollowTarget.Instance.SetTarget(transform);
     }
 
     public void PlayAnimation(string nodeName)
@@ -79,15 +80,17 @@ public class Player : Actor
         }
     }
     // 이거는 아직 사용하는 곳이 없다
-    internal bool OnMoveable(Vector3 position)
+    internal bool OnMoveable(Vector3 position, float maxDistance)
     {
         Vector2Int goalPos = position.ToVector2Int();
         Vector2Int playerPos = transform.position.ToVector2Int();
+        // map은 그냥 모든 블록의 값을 가지고 있다
         var map = GroundManager.Instance.map;
+        // 플레이어로부터 모든 블록의 경로들을 path가 가지고 있다.
         var path = PathFinding2D.find4(playerPos, goalPos, map, passableValues);
         if (path.Count == 0)
             Debug.Log("길 업따 !");
-        else if (path.Count > 5)
+        else if (path.Count > maxDistance+1)
             Debug.Log("이동모태 !");
         else
             return true;

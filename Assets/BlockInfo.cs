@@ -23,6 +23,7 @@ public class BlockInfo : MonoBehaviour
     public float clickDistance = 1;
     private void OnMouseDown()
     {
+        ClearMoveableArea();
         // 마우스가 클릭되면 position을 저장하자
         downMousePosition = Input.mousePosition;
     }
@@ -49,7 +50,15 @@ public class BlockInfo : MonoBehaviour
         // clickDistance보다 작으면 Player의 OnTouch함수를 실행하자
         
     }
+    private void ClearMoveableArea()
+    {
+        highLightedMoveableArea.ForEach(x => x.ToChangeOriginalColor());
+        highLightedMoveableArea.Clear();
+    }
 
+    
+
+    static List<BlockInfo> highLightedMoveableArea = new List<BlockInfo>();
     private void ShowMoveDistance(int moveDistance)
     {
 
@@ -57,11 +66,25 @@ public class BlockInfo : MonoBehaviour
         // 쓸모 없음
         Quaternion rotate = Quaternion.Euler(0, 45, 0);
         // 블록의 위치로부터 플레이어가 이동가능한 영역의 충돌체들을 가져옴
-        var blocks = Physics.OverlapSphere(transform.position, moveDistance);
+        //var blocks = Physics.OverlapSphere(transform.position, moveDistance);
+        Vector3 halfExtents = (moveDistance / Mathf.Sqrt(2)) * 0.99f * Vector3.one;
+
+        // blocks는 플레이어에서부터 이동 가능한 거리까지의 블록들의 정보를 모아놨다
+        var blocks = Physics.OverlapBox(transform.position, halfExtents, rotate);
+
+        // 이제 이 블록들을 가지고 이동 가능한 거리 표시를 해보자
         foreach (var item in blocks)
         {
-            // 충돌체들의 블록들 색을 레드로 바꿔주자
-            item.GetComponent<BlockInfo>()?.ToChangeRedColor();
+            //조건이 맞는 블록들의 색을 변하게 하자
+            if (Player.SelectPlayer.OnMoveable(item.transform.position, moveDistance))
+            {
+                var block = item.GetComponent<BlockInfo>();
+                if (block)
+                {
+                    block.ToChangeRedColor();
+                    highLightedMoveableArea.Add(block);
+                }
+            }
         }
     }
 
@@ -79,6 +102,10 @@ public class BlockInfo : MonoBehaviour
             // 이건 왜 0으로 만들었지... 위치를 맞춰주기 위함인가...
             textMeshGo.transform.localPosition = Vector3.zero;
         }
+
+        // 좌표값으로 오브젝트의 이름이 바뀜
+        var intPos = transform.position.ToVector2Int();
+        name = $"{name}{intPos.x}:{intPos.y}";
 
         // 블록의 정보를 저장하자
         StringBuilder debugText = new StringBuilder();
@@ -117,7 +144,7 @@ public class BlockInfo : MonoBehaviour
     // 마우스가 블록에 들어 오면 실행
     void OnMouseOver()
     {
-        ToChangeRedColor();
+        // 블록에 다른 배우(캐릭터나 몬스터)가 있으면 상태UI를 보여준다.
         if (actor)
         {
             ActorStatusUI.Instance.Show(actor);
@@ -129,11 +156,14 @@ public class BlockInfo : MonoBehaviour
     {
         m_Renderer.material.color = m_MouseOverColor;
     }
+    private void ToChangeOriginalColor()
+    {
+        m_Renderer.material.color = m_OriginalColor;
+    }
 
     // 마우스가 블록을 빠져 나가면 실행
     void OnMouseExit()
     {
-        m_Renderer.material.color = m_OriginalColor;
         if (actor)
         {
             ActorStatusUI.Instance.Close();

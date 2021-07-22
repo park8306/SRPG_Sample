@@ -18356,6 +18356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nickName: "\uB808\uC628"
+  iconName: Player
   hp: 60
   mp: 20
   maxHp: 60
@@ -18365,6 +18366,18 @@ MonoBehaviour:
   passableValues: 3
   moveEase: 1
   moveTimePerUnit: 0.3
+--- !u!114 &1662010845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662010843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815e80878744a97499d5dc29469dcf4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1665514440
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22725,6 +22738,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c4213ca16959d7439a88585ebaff091, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minZoomIn: 3
+  maxZoomOut: 15
   maxDistanceForTap: 40
   maxDurationForTap: 0.4
   useMouse: 1
@@ -24785,15 +24800,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalRotation.w
@@ -24841,6 +24856,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MonsterBox
       objectReference: {fileID: 0}
+    - target: {fileID: 7736002771885755387, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8316053675317490782, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -24855,7 +24874,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8316053675317490782, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.98
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8316053675317490782, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -24905,9 +24924,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nickName: "\uBAAC\uC2A4\uD130"
+  iconName: Monster
   hp: 20
   mp: 0
   maxHp: 20
   maxMp: 0
   status: 0
   moveDistance: 5
+--- !u!114 &6574403386854249911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6574403386854249908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815e80878744a97499d5dc29469dcf4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

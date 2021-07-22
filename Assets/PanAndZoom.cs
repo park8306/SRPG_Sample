@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 public class PanAndZoom : MonoBehaviour
 {
 
+    public float minZoomIn = 3;
+    public float maxZoomOut = 15;
     /// <summary> Called as soon as the player touches the screen. The argument is the screen position. </summary>
     public event Action<Vector2> onStartTouch;
     /// <summary> Called as soon as the player stops touching the screen. The argument is the screen position. </summary>
@@ -253,6 +255,9 @@ public class PanAndZoom : MonoBehaviour
                 var currentPinchPosition = cam.ScreenToWorldPoint(center);
 
                 cam.orthographicSize = Mathf.Max(0.1f, cam.orthographicSize * oldDistance / newDistance);
+
+                cam.orthographicSize = Mathf.Max(cam.orthographicSize, minZoomIn);
+                cam.orthographicSize = Mathf.Min(cam.orthographicSize, maxZoomOut);
 
                 var newPinchPosition = cam.ScreenToWorldPoint(center);
 

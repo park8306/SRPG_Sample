@@ -15,7 +15,7 @@ public class ActorStatusUI : SingletonMonoBehavior<ActorStatusUI>
 
     Image mPBarGaugeImage;
     Image hPBarGaugeImage;
-
+    Image icon;
 
     internal void Show(Actor actor)
     {
@@ -24,6 +24,7 @@ public class ActorStatusUI : SingletonMonoBehavior<ActorStatusUI>
         // 블록이 플레이어의 정보를 받았고 블록에 마우스가 올라가있으면 플레이어 정보를 UI에 띄워준다.
         status = transform.Find("Status").GetComponent<Text>();
         nickName = transform.Find("Name").GetComponent<Text>();
+        icon = transform.Find("Icon").GetComponent<Image>();
 
         mPBarGauge = transform.Find("MPBar/MPBarGauge").GetComponent<RectTransform>();
         mPBar = transform.Find("MPBar/MPBarBG").GetComponent<RectTransform>();
@@ -50,6 +51,7 @@ public class ActorStatusUI : SingletonMonoBehavior<ActorStatusUI>
         mPBarGaugeImage.fillAmount = actor.mp / actor.maxMp;
         hPBarGaugeImage.fillAmount = actor.hp / actor.maxHp;
 
+        icon.sprite = Resources.Load<Sprite>("Icon/" + actor.iconName);
         nickName.text = actor.nickName;
         status.text = actor.status.ToString();
 
