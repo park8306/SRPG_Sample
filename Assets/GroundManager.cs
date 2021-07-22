@@ -28,7 +28,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     public Vector2Int playerPos;
 
 
-    public Dictionary<Vector2Int, BlockType> map = new Dictionary<Vector2Int, BlockType>(); // A*에서 사용
+    //public Dictionary<Vector2Int, BlockType> blockInfoMap = new Dictionary<Vector2Int, BlockType>(); // A*에서 사용
     public Dictionary<Vector2Int, BlockInfo> blockInfoMap = new Dictionary<Vector2Int, BlockInfo>(); // 맵 정보 에서 사용
 
     
@@ -53,7 +53,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
 
             // 블록들의 x,z 좌표 저장
             Vector2Int intPos = pos.ToVector2Int();
-            map[intPos] = item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장, map에는 모든 블록들의 정보가 있다
+            //blockInfoMap[intPos] = item.blockType;  // dictionary에 (블록의 위치, 블록의 타입) 저장, map에는 모든 블록들의 정보가 있다
 
             // GroundMaanger의 useDebugMode가 true라면
             if (useDebugMode)
@@ -74,7 +74,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
         // 실행한 곳의 position 정보를 담고 있는 pos를 생성
         Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
         // 만일 pos의 값이 map에 저장한 블록들의 위치와 일치하는게 없다면
-        if (map.ContainsKey(pos) == false)
+        if (blockInfoMap.ContainsKey(pos) == false)
         {
             // 로그를 발생
             Debug.LogError($"{pos} 위치에 맵이 없다");
@@ -82,7 +82,7 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
 
         //map[pos] = map[pos] | addBlockType;
         // 맵 정보를 담고있는 dictionary에 AddBlockInfo를 실행한 블록의 블록타입을 넣어주자
-        map[pos] |= addBlockType;
+        //blockInfoMap[pos] |= addBlockType;
         blockInfoMap[pos].blockType |= addBlockType;
         blockInfoMap[pos].actor = actor;
         // 디버그용 텍스트를 띄우기 위해서 사용
@@ -95,13 +95,13 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
     public void RemoveBlockInfo(Vector3 position, BlockType removeBlockType)
     {
         Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
-        if (map.ContainsKey(pos) == false)
+        if (blockInfoMap.ContainsKey(pos) == false)
         {
             Debug.LogError($"{pos} 위치에 맵이 없다");
         }
 
         //map[pos] = map[pos] | addBlockType;
-        map[pos] &= ~removeBlockType;
+        //blockInfoMap[pos] &= ~removeBlockType;
         blockInfoMap[pos].blockType &= ~removeBlockType;
         blockInfoMap[pos].actor = null;
         if (useDebugMode)

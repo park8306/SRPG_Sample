@@ -40,9 +40,9 @@ public class Player : Actor
             Mathf.RoundToInt(player.position.z));
         playerPos.x = Mathf.RoundToInt(player.position.x);   // 플레이어의 위치 저장
         playerPos.y = Mathf.RoundToInt(player.position.z);
-        var map = GroundManager.Instance.map;
+        var map = GroundManager.Instance.blockInfoMap;
         // 길 찾아주는 로직을 활용하여 길을 찾자
-        List<Vector2Int> path = PathFinding2D.find4(playerPos, goalPos, map, passableValues);
+        List<Vector2Int> path = PathFinding2D.find4(playerPos, goalPos, (Dictionary<Vector2Int, BlockInfo>)map, passableValues);
         if (path.Count == 0)
         {
             // 길이 없다면 로그를 띄워줌
@@ -85,9 +85,9 @@ public class Player : Actor
         Vector2Int goalPos = position.ToVector2Int();
         Vector2Int playerPos = transform.position.ToVector2Int();
         // map은 그냥 모든 블록의 값을 가지고 있다
-        var map = GroundManager.Instance.map;
+        var map = GroundManager.Instance.blockInfoMap;
         // 플레이어로부터 모든 블록의 경로들을 path가 가지고 있다.
-        var path = PathFinding2D.find4(playerPos, goalPos, map, passableValues);
+        var path = PathFinding2D.find4(playerPos, goalPos, (Dictionary<Vector2Int, BlockInfo>)map, passableValues);
         if (path.Count == 0)
             Debug.Log("길 업따 !");
         else if (path.Count > maxDistance+1)
