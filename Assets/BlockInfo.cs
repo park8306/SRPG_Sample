@@ -85,7 +85,26 @@ public class BlockInfo : MonoBehaviour
 
     private void SelectBlockToMoveOrAttackTarget()
     {
-        throw new NotImplementedException();
+        // 공격 대상이 있다면 공격 하자.(액터가 몬스터라면)
+        if (actor)
+        {
+            // 공격 가능한지 판단
+            if (Player.SelectedPlayer.CanAttackTarget(actor))
+            {
+                // 실제로 공격
+                Player.SelectedPlayer.AttackToTarget(actor);
+            }
+            
+        }
+        else
+        {
+            if (highLightedMoveableArea.Contains(this))
+            {
+                Player.SelectedPlayer.MoveToPosition(transform.position);
+                ClearMoveableArea();
+                StageManager.GameState = GameStateType.IngPlayerMode;
+            }
+        }
     }
 
     /// <summary>

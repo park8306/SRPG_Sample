@@ -23,6 +23,6 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     }
     void Start()
     {
-        
+        GameState = GameStateType.SelectPlayer;
     }
 }

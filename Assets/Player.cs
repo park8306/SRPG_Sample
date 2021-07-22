@@ -6,6 +6,7 @@ using System;
 
 public class Player : Actor
 {
+    public override ActorTypeEnum ActorType { get => ActorTypeEnum.Player; }
     static public Player SelectedPlayer;
     Animator animator;
     
@@ -23,9 +24,9 @@ public class Player : Actor
     {
         animator.Play(nodeName, 0, 0);
     }
-    internal void OnTouch(Vector3 position)
+    internal void MoveToPosition(Vector3 position)
     {
-        Vector2Int findPos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
+        Vector2Int findPos = position.ToVector2Int();
         FindPath(findPos);
     }
     void FindPath(Vector2Int goalPos)
@@ -78,11 +79,46 @@ public class Player : Actor
             FollowTarget.Instance.SetTarget(null);
             // 이동한 위치에는 플레이어 정보 추가
             GroundManager.Instance.AddBlockInfo(Player.SelectedPlayer.transform.position, BlockType.Player,this);
+
+            bool existAttackTarget = ShowAttackableArea();
+            if (existAttackTarget)
+            {
+                StageManager.GameState = GameStateType.SelectToAttackTarget;
+            }
+            else
+            {
+                StageManager.GameState = GameStateType.SelectPlayer;
+            }
         }
     }
-
-    internal void ShowAttackableArea()
+    internal bool CanAttackTarget(Actor actor)
     {
+        // 같은 팀을 공격대상으로 하지 않기
+        if (actor.ActorType != ActorTypeEnum.Monster)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    internal void AttackToTarget(Actor actor)
+    {
+        StartCoroutine(AttackTargetCo(actor));
+    }
+
+    public float attackTime = 5;
+    private IEnumerator AttackTargetCo(Actor actor)
+    {
+        animator.Play("Attack");
+        actor.TakeHit(power);
+        yield return new WaitForSeconds(attackTime);
+        StageManager.GameState = GameStateType.SelectPlayer;
+    }
+
+    internal bool ShowAttackableArea()
+    {
+        bool existEnemy = false;
         Vector2Int currentPos = transform.position.ToVector2Int();
 
         var map = GroundManager.Instance.blockInfoMap;
@@ -97,9 +133,11 @@ public class Player : Actor
                 if (IsEnemyExist(map[pos]))
                 {
                     map[pos].ToChangeColor(Color.red);
+                    existEnemy = true;
                 }
             }
         }
+        return existEnemy;
     }
 
     private bool IsEnemyExist(BlockInfo blockInfo)
