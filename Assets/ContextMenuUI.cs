@@ -34,9 +34,13 @@ public class ContextMenuUI : BaseUI<ContextMenuUI>
     internal void Show(Vector3 uiPosition)
     {
         base.Show();
-        print(uiPosition);
+
+        //https://youtu.be/zKjVdTQbV9w 참고
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            transform.parent.GetComponent<RectTransform>()
+            , uiPosition, null, out Vector2 localPoint);
 
         RectTransform rt = GetComponent<RectTransform>();
-        rt.anchoredPosition = uiPosition;
+        rt.anchoredPosition = localPoint;
     }
 }
