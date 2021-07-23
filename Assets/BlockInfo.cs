@@ -23,7 +23,7 @@ public class BlockInfo : MonoBehaviour
     public float clickDistance = 1;
     private void OnMouseDown()
     {
-        ClearMoveableArea();
+        //ClearMoveableArea();
         // 마우스가 클릭되면 position을 저장하자
         downMousePosition = Input.mousePosition;
     }
