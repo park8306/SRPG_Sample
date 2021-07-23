@@ -24,5 +24,7 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     void Start()
     {
         GameState = GameStateType.SelectPlayer;
+        CenterNotifyUI.Instance.Show("게임이 시작되었습니다");
+        NotifyUI.Instance.Show("게임이 NotifyUI");
     }
 }
