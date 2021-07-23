@@ -7,11 +7,11 @@ using UnityEngine.UI;
 
 public class ContextMenuUI : BaseUI<ContextMenuUI>
 {
-    Dictionary<string, UnityAction> menus = new Dictionary<string, UnityAction>();
-
     public GameObject baseItem;
     protected override void OnInit()
     {
+        Dictionary<string, UnityAction> menus = new Dictionary<string, UnityAction>();
+
         baseItem = transform.Find("BG/Button").gameObject;
 
         menus.Add("턴 종료(F10_", EndTurnPlayer);
@@ -19,7 +19,7 @@ public class ContextMenuUI : BaseUI<ContextMenuUI>
 
         foreach (var item in menus)
         {
-            GameObject go = (GameObject)Instantiate(baseItem, baseItem.transform.parent);
+            GameObject go = Instantiate(baseItem, baseItem.transform.parent);
             go.GetComponentInChildren<Text>().text = item.Key;
             go.GetComponent<Button>().AddListener(this, item.Value);
         }
@@ -29,5 +29,14 @@ public class ContextMenuUI : BaseUI<ContextMenuUI>
     private void EndTurnPlayer()
     {
         Debug.Log("EndTurnPlayer");
+    }
+
+    internal void Show(Vector3 uiPosition)
+    {
+        base.Show();
+        print(uiPosition);
+
+        RectTransform rt = GetComponent<RectTransform>();
+        rt.anchoredPosition = uiPosition;
     }
 }
