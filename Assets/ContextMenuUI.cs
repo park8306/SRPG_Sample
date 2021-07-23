@@ -15,7 +15,7 @@ public class ContextMenuUI : BaseUI<ContextMenuUI>
         baseItem = transform.Find("BG/Button").gameObject;
 
         menus.Add("턴 종료(F10_", EndTurnPlayer);
-        menus.Add("테스트 메뉴(F10_", () => { print("테스트 메뉴"); });
+        menus.Add("테스트 메뉴(F10_", () => { print("테스트 메뉴"); OnClick(); });
 
         foreach (var item in menus)
         {
@@ -29,6 +29,12 @@ public class ContextMenuUI : BaseUI<ContextMenuUI>
     private void EndTurnPlayer()
     {
         Debug.Log("EndTurnPlayer");
+        OnClick();
+    }
+
+    private void OnClick()
+    {
+        Close();
     }
 
     internal void Show(Vector3 uiPosition)

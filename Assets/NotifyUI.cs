@@ -18,6 +18,7 @@ public class NotifyUI : SingletonMonoBehavior<NotifyUI>
     internal void Show(string text, float visibleTime = 3)
     {
         base.Show();
+        canvasGroup.DOKill();
         canvasGroup.alpha = 1;
         contentsText.text = text;
 
