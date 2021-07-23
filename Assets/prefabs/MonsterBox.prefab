@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8316053675317490782}
+  - component: {fileID: 6574403386854249909}
+  - component: {fileID: 6574403386854249911}
   m_Layer: 0
   m_Name: MonsterBox
   m_TagString: Untagged
@@ -31,6 +33,40 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6574403386854249909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7736002771885755387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87b5fe3b01a95a445b3cd0f1c5c1edd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nickName: "\uBAAC\uC2A4\uD130"
+  iconName: Monster
+  power: 10
+  hp: 20
+  mp: 0
+  maxHp: 20
+  maxMp: 0
+  status: 0
+  moveDistance: 5
+  attackablePoints: []
+--- !u!114 &6574403386854249911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7736002771885755387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815e80878744a97499d5dc29469dcf4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7973152929210997918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41,6 +77,10 @@ PrefabInstance:
     - target: {fileID: 1975194375736644, guid: 128a80094e00bf34fa2555766a7eea0e, type: 3}
       propertyPath: m_Name
       value: Boximon Fiery
+      objectReference: {fileID: 0}
+    - target: {fileID: 4114503819697490, guid: 128a80094e00bf34fa2555766a7eea0e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.15
       objectReference: {fileID: 0}
     - target: {fileID: 4744222756475520, guid: 128a80094e00bf34fa2555766a7eea0e, type: 3}
       propertyPath: m_RootOrder

@@ -109,10 +109,12 @@ public class Player : Actor
     }
 
     public float attackTime = 5;
-    private IEnumerator AttackTargetCo(Actor actor)
+    private IEnumerator AttackTargetCo(Actor attackTarget)
     {
+        transform.LookAt(attackTarget.transform);
+
         animator.Play("Attack");
-        actor.TakeHit(power);
+        attackTarget.TakeHit(power);
         yield return new WaitForSeconds(attackTime);
         StageManager.GameState = GameStateType.SelectPlayer;
     }
