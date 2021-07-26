@@ -45,7 +45,7 @@ public class BlockInfo : MonoBehaviour
             case GameStateType.SelectPlayer:    // Player를 선택할 상태라면
                 SelectPlayer();
                 break;
-            case GameStateType.SelectBlockToMoveOrAttackTarget:
+            case GameStateType.SelectedPlayerMoveOrAct:
                 SelectBlockToMoveOrAttackTarget();
                 break;
             case GameStateType.SelectToAttackTarget:
@@ -68,7 +68,15 @@ public class BlockInfo : MonoBehaviour
 
     private void SelectToAttackTarget()
     {
-        throw new NotImplementedException();
+        if (Player.SelectedPlayer.enemyExistPoint.Contains(this))
+        {
+            // 공격 가능한지 판단
+            if (Player.SelectedPlayer.CanAttackTarget(actor))
+            {
+                // 실제로 공격
+                Player.SelectedPlayer.AttackToTarget(actor);
+            }
+        }
     }
 
     private void SelectBlockToMoveOrAttackTarget()
@@ -79,8 +87,13 @@ public class BlockInfo : MonoBehaviour
             // 공격 가능한지 판단
             if (Player.SelectedPlayer.CanAttackTarget(actor))
             {
+                ClearMoveableArea();
                 // 실제로 공격
                 Player.SelectedPlayer.AttackToTarget(actor);
+            }
+            else
+            {
+                NotifyUI.Instance.Show("여기는 공격할 수 없어요");
             }
             
         }
@@ -88,6 +101,7 @@ public class BlockInfo : MonoBehaviour
         {
             if (highLightedMoveableArea.Contains(this))// 이동 가능한 영역에 포한되어있는 블록이면 이동 시키자
             {
+                Player.SelectedPlayer.ClearEnemyExitPosint();
                 Player.SelectedPlayer.MoveToPosition(transform.position);// 플레이어를 이동시키고
                 ClearMoveableArea();    // 이동가능영역 표시를 지워주자
                 StageManager.GameState = GameStateType.IngPlayerMode;   // 플레이어가 움직이는 중이라고 상태를 바꿔주자
@@ -104,14 +118,32 @@ public class BlockInfo : MonoBehaviour
         if (actor.GetType() == typeof(Player))
         {
             // 플레이어의 정보를 넣어준다(캐릭터가 여러개라면 클릭한 캐릭터의 정보를 넣어준다)
+            Player player = (Player)actor;
+            if(player.CompleteTurn)
+            {
+                CenterNotifyUI.Instance.Show("모든 행동이 끝난 플레이어 입니다");
+                return;
+            }
+
             Player.SelectedPlayer = (Player)actor;
 
             // 선택한 캐릭터의 이동 가능한 영역 표시
-            ShowMoveDistance(Player.SelectedPlayer.moveDistance);
+            if (player.completeMove == false)
+                ShowMoveableArea(Player.SelectedPlayer.moveDistance);
+            else
+                CenterNotifyUI.Instance.Show("이미 이동했습니다");
 
-            // 선택한 캐릭터의 현재 위치에서 공격 가능한 영역 표시.
-            Player.SelectedPlayer.ShowAttackableArea();
-            StageManager.GameState = GameStateType.SelectBlockToMoveOrAttackTarget;
+            if (player.completeAct == false)
+            {
+                // 선택한 캐릭터의 현재 위치에서 공격 가능한 영역 표시.
+                Player.SelectedPlayer.ShowAttackableArea();
+            }
+            else
+            {
+                CenterNotifyUI.Instance.Show("이미 이동했습니다");
+            }
+
+            StageManager.GameState = GameStateType.SelectedPlayerMoveOrAct;
         }
     }
     // 이동가능한 거리를 표시했던걸 원래 색으로 바꿔주자
@@ -126,7 +158,7 @@ public class BlockInfo : MonoBehaviour
     
 
     static List<BlockInfo> highLightedMoveableArea = new List<BlockInfo>();
-    private void ShowMoveDistance(int moveDistance)
+    private void ShowMoveableArea(int moveDistance)
     {
 
         //Vector2Int currentPos = transform.position.ToVector2Int();

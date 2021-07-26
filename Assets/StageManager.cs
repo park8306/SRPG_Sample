@@ -6,7 +6,7 @@ public enum GameStateType
 {
     NotInit,                // 아직 초기화 되지 않음
     SelectPlayer,           // 조정할 아군 선택,
-    SelectBlockToMoveOrAttackTarget,  // 이동혹은 공격 타겟을 선택
+    SelectedPlayerMoveOrAct,  // 선택된 플레이어가 이동하거나 행동을 할 차례
     IngPlayerMode,          // 플레이어 이동 중
     SelectToAttackTarget,   // 이동 후에 공격할 타겟을 선택.
     AttackToTarget,         // 모든 플레이어 선택했다면 MonsterTurn을 진행 시킨다.
@@ -20,6 +20,7 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     {
         get => Instance.gameState;
         set {
+            Debug.Log($"{Instance.gameState} => {value}");
             NotifyUI.Instance.Show(value.ToString(), 10);
             Instance.gameState = value;
         }

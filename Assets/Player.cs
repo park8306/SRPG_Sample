@@ -90,12 +90,17 @@ public class Player : Actor
             {
                 StageManager.GameState = GameStateType.SelectPlayer;
             }
+            completeMove = true;
         }
     }
-    internal bool CanAttackTarget(Actor actor)
+    internal bool CanAttackTarget(Actor enemy)
     {
         // 같은 팀을 공격대상으로 하지 않기
-        if (actor.ActorType != ActorTypeEnum.Monster)
+        if (enemy.ActorType != ActorTypeEnum.Monster)
+        {
+            return false;
+        }
+        if (IsInAttackableArea(enemy.transform.position) == false)
         {
             return false;
         }
@@ -103,32 +108,59 @@ public class Player : Actor
         return true;
     }
 
+    private bool IsInAttackableArea(Vector3 enemyPosition)
+    {
+        Vector2Int enemyPositionVector2 = enemyPosition.ToVector2Int();
+        Vector2Int currentPos = transform.position.ToVector2Int();
+
+        // 공격 가능한 지역에 적이 있는지 확인하자., 모든 공격 위치에 몬스터가 있는지 확인한다
+        foreach (var item in attackableLocalPositions)
+        {
+            // pos : 공격 가능한 월드 포지션
+            Vector2Int pos = item + currentPos;
+
+            if (pos == enemyPositionVector2)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     internal void AttackToTarget(Actor actor)
     {
-        StartCoroutine(AttackTargetCo(actor));
+        ClearEnemyExitPosint();
+
+        StartCoroutine(AttackToTargetCo(actor));
     }
 
     public float attackTime = 5;
-    private IEnumerator AttackTargetCo(Actor attackTarget)
+    private IEnumerator AttackToTargetCo(Actor attackTarget)
     {
         transform.LookAt(attackTarget.transform);
 
         animator.Play("Attack");
         attackTarget.TakeHit(power);
         yield return new WaitForSeconds(attackTime);
+        completeAct = true;
         StageManager.GameState = GameStateType.SelectPlayer;
     }
+    public void ClearEnemyExitPosint()
+    {
+        enemyExistPoint.ForEach(x => x.ToChangeOriginalColor());
+        enemyExistPoint.Clear();
+    }
 
+    public List<BlockInfo> enemyExistPoint = new List<BlockInfo>();
     internal bool ShowAttackableArea()
     {
-        bool existEnemy = false;
         // 선택된 캐릭터의 현재 위치가 저장된다
         Vector2Int currentPos = transform.position.ToVector2Int();
 
         var map = GroundManager.Instance.blockInfoMap;
 
         // 공격 가능한 지역에 적이 있는지 확인하자., 모든 공격 위치에 몬스터가 있는지 확인한다
-        foreach (var item in attackablePoints)
+        foreach (var item in attackableLocalPositions)
         {
             // 캐릭터의 원래위치 + 로컬위치니 월드 지역 위치가 된다
             Vector2Int pos = item + currentPos; // item의 월드 지역 위치
@@ -136,12 +168,16 @@ public class Player : Actor
             {
                 if (IsEnemyExist(map[pos])) // 공격 범위에 적(몬스터)가 있는가?
                 {
-                    map[pos].ToChangeColor(Color.red);  // 있으면 해당 위치의 블록 색을 바꾸자
-                    existEnemy = true;  // 적이 있다
+                    enemyExistPoint.Add(map[pos]);
                 }
             }
         }
-        return existEnemy;
+        enemyExistPoint.ForEach(x => x.ToChangeColor(Color.red));
+
+        //map[pos].ToChangeColor(Color.red);  // 있으면 해당 위치의 블록 색을 바꾸자
+        //existEnemy = true;  // 적이 있다
+
+        return enemyExistPoint.Count > 0;
     }
     // 몬스터가 있는가
     private bool IsEnemyExist(BlockInfo blockInfo)
@@ -167,17 +203,13 @@ public class Player : Actor
         var map = GroundManager.Instance.blockInfoMap;
         // 블록들의 정보를 이용해 해당 블록과 플레이어의 경로를 찾는다
         var path = PathFinding2D.find4(playerPos, goalPos, (Dictionary<Vector2Int, BlockInfo>)map, passableValues);
-        if (path.Count == 0)
-            Debug.Log("길 업따 !");
+        if (path.Count == 0 || path.Count > maxDistance +1)
+            return false;
         // 만약 maxDistance보다 경로의 수가 많으면 이동 못한다고 로그를 띄워준다.
         // 여기서 +1을 해주는 이유는 처음 경로는 자기 자신이기 때문이다(?)
         // 만약 path.Count가 6이라면 자기자신의 경로도 포함이 되기 때문에 최대 갈 수 있는 거리는 5가된다.
-        else if (path.Count > maxDistance+1)
-            Debug.Log("이동모태 !");
-        else
-            return true;
 
-        return false;
+        return true;
     }
 
     public Ease moveEase = Ease.Linear;
