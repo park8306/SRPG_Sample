@@ -29,6 +29,8 @@ public class ContextMenuUI : BaseUI<ContextMenuUI>
     private void EndTurnPlayer()
     {
         Debug.Log("EndTurnPlayer");
+
+        StageManager.Instance.EndTurnPlayer();
         OnClick();
     }
 
