@@ -86,8 +86,8 @@ public class Actor : MonoBehaviour
     {
         // 맞은 데미지 표시하자.
         GameObject damageTextGoInResource = (GameObject)Resources.Load("DamageText");
-        var pos = transform.position;
-        pos.y = 1.3f;
+        var pos = transform.position;   // 공격을 당한 녀석의 위치값
+        pos.y = 1.3f;   // 공격 당한 녀석의 머리 쪽으로 위치 수정
         GameObject damageTextGo = Instantiate(damageTextGoInResource,
             pos,
             damageTextGoInResource.transform.rotation, transform);
@@ -211,12 +211,12 @@ public class Actor : MonoBehaviour
     }
     protected IEnumerator AttackToTargetCo(Actor attackTarget)
     {
-        transform.LookAt(attackTarget.transform);
+        transform.LookAt(attackTarget.transform);   // 공격 할 대상을 바라보고
 
         animator.Play("Attack");
-        StartCoroutine(attackTarget.TakeHitCO(power));
-        yield return new WaitForSeconds(attackTime);
-        completeAct = true;
-        //StageManager.GameState = GameStateType.SelectPlayer;
+        StartCoroutine(attackTarget.TakeHitCO(power));  // 공격 타겟의 TakeHitCo를 실행시키자
+        yield return new WaitForSeconds(attackTime);    // 일정 공격 시간이 지나고
+        completeAct = true; // Act행동을 완료하자
+        
     }
 } 

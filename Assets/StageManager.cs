@@ -33,6 +33,7 @@ public class StageManager : SingletonMonoBehavior<StageManager>
 
     private void OnStartTurn()
     {
+        // 카메라의 위치를 Players 첫 번째의 위치로 따라가자
         FollowTarget.Instance.SetTarget(Player.Players[0].transform);
 
         // 몇 번째 턴인지 보여주자.

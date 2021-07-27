@@ -31,13 +31,13 @@ public class Monster : Actor
         if (IsInAttackableArea(enemyPlayer.transform.position))
         {
             yield return AttackToTargetCo(enemyPlayer);
-        }
+        }// 공격 가능한 위치에 있지 않으면
         else
         {
-            // Player쪽으로 이동하자.
+            // 가장 가까이에 있는 플레이어로 이동하고
             yield return FindPathCo(enemyPlayer.transform.position.ToVector2Int());
 
-            // 공격할 수 있으면 공격하자
+            // 공격 범위 안에 들어오면 공격하자
             if (IsInAttackableArea(enemyPlayer.transform.position))
             {
                 yield return AttackToTargetCo(enemyPlayer);
