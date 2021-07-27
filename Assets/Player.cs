@@ -62,21 +62,16 @@ public class Player : Actor
     internal void AttackToTarget(Actor actor)
     {
         ClearEnemyExitPosint();
-
-        StartCoroutine(AttackToTargetCo(actor));
+        StartCoroutine( AttackToTargetCo_(actor));
     }
 
-    public float attackTime = 5;
-    private IEnumerator AttackToTargetCo(Actor attackTarget)
+    private IEnumerator AttackToTargetCo_(Actor actor)
     {
-        transform.LookAt(attackTarget.transform);
+        yield return AttackToTargetCo(actor);
 
-        animator.Play("Attack");
-        attackTarget.TakeHit(power);
-        yield return new WaitForSeconds(attackTime);
-        completeAct = true;
         StageManager.GameState = GameStateType.SelectPlayer;
     }
+
     public void ClearEnemyExitPosint()
     {
         enemyExistPoint.ForEach(x => x.ToChangeOriginalColor());

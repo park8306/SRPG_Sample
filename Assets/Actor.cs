@@ -44,6 +44,8 @@ public class Actor : MonoBehaviour
     protected Animator animator;
     protected BlockType passableValues = BlockType.Walkable | BlockType.Water;
 
+    public float attackTime = 5;
+
     protected void Awake()
     {
         // 먼저 처음 지정한 공격범위를 가져오자
@@ -157,5 +159,15 @@ public class Actor : MonoBehaviour
             }
         }
         return false;
+    }
+    protected IEnumerator AttackToTargetCo(Actor attackTarget)
+    {
+        transform.LookAt(attackTarget.transform);
+
+        animator.Play("Attack");
+        attackTarget.TakeHit(power);
+        yield return new WaitForSeconds(attackTime);
+        completeAct = true;
+        StageManager.GameState = GameStateType.SelectPlayer;
     }
 }
