@@ -60,6 +60,7 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     {
         foreach(var monster in Monster.Monsters)
         {
+            FollowTarget.Instance.SetTarget(monster.transform);
             yield return monster.AutoAttackCo();
         }
 
@@ -68,12 +69,22 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     int turn = 1;
     private void ProgressNextTurn()
     {
+        ClearTurnInfo();
+
         turn++;
         // 몇 번째 턴인지 보여주자.
         OnStartTurn();
     }
+
+    private void ClearTurnInfo()
+    {
+        Player.Players.ForEach(x => { x.completeMove = false; x.completeAct = false; });
+
+        Monster.Monsters.ForEach(x => { x.completeMove = false; x.completeAct = false; });
+    }
+
     private void ShowCurrentTurn()
     {
-        CenterNotifyUI.Instance.Show($"{turn}이 시작되었습니다");
+        CenterNotifyUI.Instance.Show($"{turn}턴이 시작되었습니다");
     }
 }

@@ -74,7 +74,7 @@ public class BlockInfo : MonoBehaviour
             if (Player.SelectedPlayer.CanAttackTarget(actor))
             {
                 // 실제로 공격
-                Player.SelectedPlayer.AttackToTarget(actor);
+                Player.SelectedPlayer.AttackToTarget((Monster)actor);
             }
         }
     }
@@ -89,7 +89,7 @@ public class BlockInfo : MonoBehaviour
             {
                 ClearMoveableArea();
                 // 실제로 공격
-                Player.SelectedPlayer.AttackToTarget(actor);
+                Player.SelectedPlayer.AttackToTarget((Monster)actor);
             }
             else
             {

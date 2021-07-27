@@ -1,6 +1,8 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public enum StatusType
@@ -56,7 +58,7 @@ public class Actor : MonoBehaviour
         foreach (var item in attackPoints)
         {
             // 공격포인트가 위치한 로컬 위치 정보들을 가져온다.
-            attackableLocalPositions.Add(item.transform.localPosition.ToVector2Int());
+            attackableLocalPositions.Add((item.transform.position - transform.position).ToVector2Int());
         }
         // 오른쪽에 있는 공격 포인트
         transform.Rotate(0, 90, 0);
@@ -74,10 +76,43 @@ public class Actor : MonoBehaviour
         // 다시 앞쪽 보도록 돌림.
         transform.Rotate(0, 90, 0);
     }
-    internal virtual void TakeHit(int power)
+    protected void OnDestroy()
     {
-        hp -= power;
+        GroundManager.Instance.RemoveBlockInfo(transform.position, GetBlockType());
     }
+
+    public float takeHitTime = 0.7f;
+    internal IEnumerator TakeHitCO(int power)
+    {
+        // 맞은 데미지 표시하자.
+        GameObject damageTextGoInResource = (GameObject)Resources.Load("DamageText");
+        var pos = transform.position;
+        pos.y = 1.3f;
+        GameObject damageTextGo = Instantiate(damageTextGoInResource,
+            pos,
+            damageTextGoInResource.transform.rotation, transform);
+
+        damageTextGo.GetComponent<TextMeshPro>().text = power.ToString();
+        Destroy(damageTextGo, 2);
+
+        hp -= power;
+        animator.Play("TakeHit");
+        yield return new WaitForSeconds(takeHitTime);
+
+        if (hp <= 0)
+        {
+            animator.Play("Die");
+            status = StatusType.Die;
+
+            OnDie();
+        }
+    }
+
+    protected virtual void OnDie()
+    {
+        Debug.LogError("자식들이 오버라이드 해서 구현해야함");
+    }
+
     protected IEnumerator FindPathCo(Vector2Int destPos)
     {
         Transform myTr = transform;
@@ -153,8 +188,10 @@ public class Actor : MonoBehaviour
         animator.Play(nodeName, 0, 0);
     }
 
+    // 적 위치가 공격 가능한 범위에 있는지 판단
     protected bool IsInAttackableArea(Vector3 enemyPosition)
     {
+        // 적과 나의 위치를 Vector2Int로 바꿔주자
         Vector2Int enemyPositionVector2 = enemyPosition.ToVector2Int();
         Vector2Int currentPos = transform.position.ToVector2Int();
 
@@ -162,23 +199,24 @@ public class Actor : MonoBehaviour
         foreach (var item in attackableLocalPositions)
         {
             // pos : 공격 가능한 월드 포지션
+            // item에는 공격 가능한 범위의 로컬 포지션이 들어 있다. 현재 포지션을 더해 월드 포지션으로 바꿔주자
             Vector2Int pos = item + currentPos;
-
+            // 공격 위치와 적 위치가 같으면
             if (pos == enemyPositionVector2)
             {
-                return true;
+                return true;    // 공격 가능한 범위에 있다고 알려준다.
             }
         }
-        return false;
+        return false;   // 그 외에는 공격 범위에 없다고 알려준다.
     }
     protected IEnumerator AttackToTargetCo(Actor attackTarget)
     {
         transform.LookAt(attackTarget.transform);
 
         animator.Play("Attack");
-        attackTarget.TakeHit(power);
+        StartCoroutine(attackTarget.TakeHitCO(power));
         yield return new WaitForSeconds(attackTime);
         completeAct = true;
-        StageManager.GameState = GameStateType.SelectPlayer;
+        //StageManager.GameState = GameStateType.SelectPlayer;
     }
 } 

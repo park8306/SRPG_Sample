@@ -17,8 +17,9 @@ public class Monster : Actor
         base.Awake();
         Monsters.Add(this);
     }
-    protected void OnDestroy()
+    new protected void OnDestroy()
     {
+        base.OnDestroy();
         Monsters.Remove(this);
     }
 
@@ -37,16 +38,14 @@ public class Monster : Actor
             yield return FindPathCo(enemyPlayer.transform.position.ToVector2Int());
 
             // 공격할 수 있으면 공격하자
-            yield return AttackToTargetCo(enemyPlayer);
+            if (IsInAttackableArea(enemyPlayer.transform.position))
+            {
+                yield return AttackToTargetCo(enemyPlayer);
+            }
         }
 
 
         yield return null;
-    }
-
-    private bool ISAttackablePosition(Vector3 position)
-    {
-        throw new NotImplementedException();
     }
 
     private Player GetNearestPlayer()
@@ -55,7 +54,7 @@ public class Monster : Actor
         var nearestPlayer= Player.Players
             .Where(x => x.status != StatusType.Die)
             .OrderBy(x => Vector3.Distance(x.transform.position, myPosition))
-            .Single();
+            .First();
         return nearestPlayer;
     }
 
@@ -66,19 +65,21 @@ public class Monster : Actor
         animator = GetComponentInChildren<Animator>();
     }
     // 피격 당할 시 실행
-    internal override void TakeHit(int power)
-    {
-        // 맞은 데미지 표시하자.
-        GameObject damageTextGo = (GameObject)Instantiate(Resources.Load("DamageText"), transform);
-        damageTextGo.transform.localPosition = new Vector3(0, 1.3f, 0);
-        damageTextGo.GetComponent<TextMeshPro>().text = power.ToString();
-        Destroy(damageTextGo, 2);
-
-        hp -= power;
-        animator.Play("TakeHit");
-    }
+    
     public override BlockType GetBlockType()
     {
         return BlockType.Monster;
+    }
+    protected override void OnDie()
+    {
+        // 몬스터가 죽은 경우.
+        // 죽인 플레이어한테 경험치 주기
+        // 몬스터 GameObject 파괴.
+        // 모든 몬스터가 죽었는지 파악해서 다 죽었다면 스테이지 클리어
+        if (Monsters.Where(x => x.status != StatusType.Die).Count() == 0)
+        {
+            CenterNotifyUI.Instance.Show("Stage Clear");
+        }
+        Destroy(gameObject, 1);
     }
 }
