@@ -88,26 +88,27 @@ public class Actor : MonoBehaviour
         GameObject damageTextGoInResource = (GameObject)Resources.Load("DamageText");
         var pos = transform.position;   // 공격을 당한 녀석의 위치값
         pos.y = 1.3f;   // 공격 당한 녀석의 머리 쪽으로 위치 수정
+        // 공격당한 녀석에게 데미지를 표시하자. 마지막 transform은 맞은 녀석의 부모로 가지고 생성된다
         GameObject damageTextGo = Instantiate(damageTextGoInResource,
             pos,
             damageTextGoInResource.transform.rotation, transform);
-
+        // 데미지 텍스트에 power값 만큼 텍스트에 표시하자
         damageTextGo.GetComponent<TextMeshPro>().text = power.ToString();
         Destroy(damageTextGo, 2);
-
+        // hp를 power만큼 깍고
         hp -= power;
-        animator.Play("TakeHit");
+        animator.Play("TakeHit"); // 맞는 모션을 취하고
         yield return new WaitForSeconds(takeHitTime);
-
+        // hp가 0과 같거나 작으면 죽는 모션을 하고
         if (hp <= 0)
         {
             animator.Play("Die");
-            status = StatusType.Die;
-
+            status = StatusType.Die; // 상태도 죽었다고 표시해주자
+            // 자식들이 오버라이드해서 구현하려는 함수(monster와 player가 행동해야할 내용이 다르다)
             OnDie();
         }
     }
-
+    
     protected virtual void OnDie()
     {
         Debug.LogError("자식들이 오버라이드 해서 구현해야함");
@@ -115,11 +116,13 @@ public class Actor : MonoBehaviour
 
     protected IEnumerator FindPathCo(Vector2Int destPos)
     {
-        Transform myTr = transform;
-        Vector2Int myPos = myTr.position.ToVector2Int();
+        Transform myTr = transform; // 이동하기전 자신의 Transform을 넣어주고
+        // 이동하기전 자신 위치 저장
+        Vector2Int myPos = myTr.position.ToVector2Int(); 
         Vector3 myPosVector3 = myTr.position;
+        // map : 모든 맵들의 정보
         var map = GroundManager.Instance.blockInfoMap;
-        // 길 찾아주는 로직을 활용하여 길을 찾자
+        // 길 찾아주는 로직을 활용하여 길을 찾자, path에는 목적지까지 가는 블록들의 위치가 담겨있다
         List<Vector2Int> path = PathFinding2D.find4(myPos, destPos, map, passableValues);
         if (path.Count == 0)
         {
@@ -128,24 +131,22 @@ public class Actor : MonoBehaviour
         }
         else
         {
-            // 원래 위치에선 플레이어 정보 삭제
+            // 자신이 서 있던 자리의 정보를 없애준다
             GroundManager.Instance.RemoveBlockInfo(myPosVector3, GetBlockType());
-            // 길이 있다면
-            // 애니메이션 Walk를 실행
             PlayAnimation("Walk");
             // FollowTarget의 SetTarget을 실행시켜 선택된 캐릭터를 카메라가 따라가게 하자
             FollowTarget.Instance.SetTarget(myTr);
             // 경로의 첫 지점의 자신의 지점이니 없애주자
             path.RemoveAt(0);
 
-            // 몬스터 일 때는 마지막 지점을 삭제한다.
+            // 움직일 경로를 찾은 대상이 몬스터 일 때는 마지막 지점을 삭제한다.(플레이어와 겹치지 않기 위해) 
             if (ActorType == ActorTypeEnum.Monster)
             {
-                path.RemoveAt(path.Count - 1);
+                path.RemoveAt(path.Count - 1);  // 마지막 지점 삭제
             }
-            if (path.Count>moveDistance)
+            if (path.Count>moveDistance)    // 움직일 경로의 수가 moveDistance보다 크면
             {
-                path.RemoveRange(moveDistance, path.Count - moveDistance);
+                path.RemoveRange(moveDistance, path.Count - moveDistance);  // 해당 경로에서 moveDistance만큼만 움직이게 한다.
             }
             // path에 저장되어있는 위치를 하나씩 불러와 이동 시키자
             foreach (var item in path)
@@ -155,6 +156,7 @@ public class Actor : MonoBehaviour
                 myTr.LookAt(playerNewPos);
                 // 플레이어가 움직일 때 자연스럽게 움직이도록 하자
                 // DOMove함수는 DOTween을 임포트하여 가져온 함수
+                // moveTimePerUnit시간동안 자연스럽게 움직이도록 한다
                 myTr.DOMove(playerNewPos, moveTimePerUnit);
                 // 움직이는 시간 만큼 기다리자
                 yield return new WaitForSeconds(moveTimePerUnit);
@@ -171,7 +173,7 @@ public class Actor : MonoBehaviour
             OnCompleteMove();
         }
     }
-
+    // 대상의 블록타입을 받아오자
     public virtual BlockType GetBlockType()
     {
         Debug.LogError("자식에서 GetBlockType함수 오버라이드 해야함");
@@ -182,7 +184,7 @@ public class Actor : MonoBehaviour
     {
         
     }
-
+    // 애니메이션을 실행하는 함수(nodeName, 0, 0) 이부분이 귀찮다... 함수로 만드는게 좋아보인다
     public void PlayAnimation(string nodeName)
     {
         animator.Play(nodeName, 0, 0);

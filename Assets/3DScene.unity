@@ -24215,7 +24215,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   completeUiInite: 0
   target: {fileID: 0}
-  offset: {x: 0, y: 10, z: 9}
+  offset: {x: 0, y: 10.76, z: 8.4}
 --- !u!114 &1988166651
 MonoBehaviour:
   m_ObjectHideFlags: 0
