@@ -6,6 +6,19 @@ using System;
 
 public class Player : Actor
 {
+    public static List<Player> Players = new List<Player>();
+    // Start is called before the first frame update
+    new protected void Awake()
+    {
+        base.Awake();
+        Players.Add(this);
+    }
+    protected void OnDestroy()
+    {
+        Players.Remove(this);
+    }
+
+
     public override ActorTypeEnum ActorType { get => ActorTypeEnum.Player; }
     static public Player SelectedPlayer;
     Animator animator;
@@ -106,25 +119,6 @@ public class Player : Actor
         }
 
         return true;
-    }
-
-    private bool IsInAttackableArea(Vector3 enemyPosition)
-    {
-        Vector2Int enemyPositionVector2 = enemyPosition.ToVector2Int();
-        Vector2Int currentPos = transform.position.ToVector2Int();
-
-        // 공격 가능한 지역에 적이 있는지 확인하자., 모든 공격 위치에 몬스터가 있는지 확인한다
-        foreach (var item in attackableLocalPositions)
-        {
-            // pos : 공격 가능한 월드 포지션
-            Vector2Int pos = item + currentPos;
-
-            if (pos == enemyPositionVector2)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     internal void AttackToTarget(Actor actor)
