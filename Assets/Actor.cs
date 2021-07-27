@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,6 +39,11 @@ public class Actor : MonoBehaviour
 
     // 공격 범위를 모아두자.
     public List<Vector2Int> attackableLocalPositions = new List<Vector2Int>();
+
+    public float moveTimePerUnit = 0.3f;
+    protected Animator animator;
+    protected BlockType passableValues = BlockType.Walkable | BlockType.Water;
+
     protected void Awake()
     {
         // 먼저 처음 지정한 공격범위를 가져오자
@@ -68,6 +74,70 @@ public class Actor : MonoBehaviour
     internal virtual void TakeHit(int power)
     {
         hp -= power;
+    }
+    protected IEnumerator FindPathCo(Vector2Int destPos)
+    {
+        Transform myTr = transform;
+        Vector2Int myPos = myTr.position.ToVector2Int();
+        Vector3 myPosVector3 = myTr.position;
+        var map = GroundManager.Instance.blockInfoMap;
+        // 길 찾아주는 로직을 활용하여 길을 찾자
+        List<Vector2Int> path = PathFinding2D.find4(myPos, destPos, map, passableValues);
+        if (path.Count == 0)
+        {
+            // 길이 없다면 로그를 띄워줌
+            Debug.Log("길이 없다");
+        }
+        else
+        {
+            // 원래 위치에선 플레이어 정보 삭제
+            GroundManager.Instance.RemoveBlockInfo(myPosVector3, GetBlockType());
+            // 길이 있다면
+            // 애니메이션 Walk를 실행
+            PlayAnimation("Walk");
+            // FollowTarget의 SetTarget을 실행시켜 선택된 캐릭터를 카메라가 따라가게 하자
+            FollowTarget.Instance.SetTarget(myTr);
+            // 경로의 첫 지점의 자신의 지점이니 없애주자
+            path.RemoveAt(0);
+            // path에 저장되어있는 위치를 하나씩 불러와 이동 시키자
+            foreach (var item in path)
+            {
+                Vector3 playerNewPos = new Vector3(item.x, myPosVector3.y, item.y);
+                // 플레이어가 이동할 방향으로 바라보자
+                myTr.LookAt(playerNewPos);
+                // 플레이어가 움직일 때 자연스럽게 움직이도록 하자
+                // DOMove함수는 DOTween을 임포트하여 가져온 함수
+                myTr.DOMove(playerNewPos, moveTimePerUnit);
+                // 움직이는 시간 만큼 기다리자
+                yield return new WaitForSeconds(moveTimePerUnit);
+            }
+            // 이동이 끝나면 Idle애니메이션을 실행시키자
+            PlayAnimation("Idle");
+            // null을 주어 카메라가 따라가지 않도록 하자
+            FollowTarget.Instance.SetTarget(null);
+            // 이동한 위치에는 플레이어 정보 추가
+            GroundManager.Instance.AddBlockInfo(myPosVector3, GetBlockType(), this);
+
+
+            completeMove = true;
+            OnCompleteMove();
+        }
+    }
+
+    public virtual BlockType GetBlockType()
+    {
+        Debug.LogError("자식에서 GetBlockType함수 오버라이드 해야함");
+        return BlockType.None;
+    }
+
+    protected  virtual void OnCompleteMove()
+    {
+        
+    }
+
+    public void PlayAnimation(string nodeName)
+    {
+        animator.Play(nodeName, 0, 0);
     }
 
     protected bool IsInAttackableArea(Vector3 enemyPosition)
