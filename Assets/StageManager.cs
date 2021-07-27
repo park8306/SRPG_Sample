@@ -28,12 +28,19 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     }
     void Start()
     {
-        GameState = GameStateType.SelectPlayer;
-
-        ShowCurrentTurn();
-        CenterNotifyUI.Instance.Show("게임이 시작되었습니다", 1.5f);
+        OnStartTurn();
     }
 
+    private void OnStartTurn()
+    {
+        FollowTarget.Instance.SetTarget(Player.Players[0].transform);
+
+        // 몇 번째 턴인지 보여주자.
+        ShowCurrentTurn();
+
+        // 게임상태를 SelectPlayer
+        GameState = GameStateType.SelectPlayer;
+    }
 
     private void Update()
     {
@@ -63,10 +70,7 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     {
         turn++;
         // 몇 번째 턴인지 보여주자.
-        ShowCurrentTurn();
-        // 게임 상태를 SelectPlayer로 바꾸고
-        GameState = GameStateType.SelectPlayer;
-        // 턴 정보 초기화 안된것들 초기화 해주자.
+        OnStartTurn();
     }
     private void ShowCurrentTurn()
     {

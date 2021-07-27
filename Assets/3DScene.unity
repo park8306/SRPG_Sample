@@ -4995,7 +4995,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   completeUiInite: 0
-  gameState: 0
+  m_gameState: 0
 --- !u!4 &454149583
 Transform:
   m_ObjectHideFlags: 0
@@ -9077,6 +9077,10 @@ PrefabInstance:
     - target: {fileID: 1487688346712832, guid: 41b018f12ce178147b4607881dbcdcea, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487688346712832, guid: 41b018f12ce178147b4607881dbcdcea, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4982127149357740, guid: 41b018f12ce178147b4607881dbcdcea, type: 3}
       propertyPath: m_RootOrder
@@ -23159,6 +23163,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1219471545100730, guid: 1b8fbee291cdc1046a281cb2b3b51bf7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4562075604489022, guid: 1b8fbee291cdc1046a281cb2b3b51bf7, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -26493,6 +26501,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6574403386854249909, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
+      propertyPath: moveDistance
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7736002771885755387, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_Name
       value: MonsterBox

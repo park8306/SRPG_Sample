@@ -11,7 +11,7 @@ public class Monster : Actor
     public static List<Monster> Monsters = new List<Monster>();
     public override ActorTypeEnum ActorType { get => ActorTypeEnum.Monster; }
     // Start is called before the first frame update
-    Animator animator;
+    //Animator animator;
     new protected void Awake()
     {
         base.Awake();
@@ -37,7 +37,7 @@ public class Monster : Actor
             yield return FindPathCo(enemyPlayer.transform.position.ToVector2Int());
 
             // 공격할 수 있으면 공격하자
-            yield return AttackToTarget(enemyPlayer);
+            yield return AttackToTargetCo(enemyPlayer);
         }
 
 

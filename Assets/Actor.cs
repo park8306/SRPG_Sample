@@ -48,6 +48,7 @@ public class Actor : MonoBehaviour
 
     protected void Awake()
     {
+        animator = GetComponentInChildren<Animator>();
         // 먼저 처음 지정한 공격범위를 가져오자
         var attackPoints = GetComponentsInChildren<AttackPoint>();
 
@@ -101,6 +102,16 @@ public class Actor : MonoBehaviour
             FollowTarget.Instance.SetTarget(myTr);
             // 경로의 첫 지점의 자신의 지점이니 없애주자
             path.RemoveAt(0);
+
+            // 몬스터 일 때는 마지막 지점을 삭제한다.
+            if (ActorType == ActorTypeEnum.Monster)
+            {
+                path.RemoveAt(path.Count - 1);
+            }
+            if (path.Count>moveDistance)
+            {
+                path.RemoveRange(moveDistance, path.Count - moveDistance);
+            }
             // path에 저장되어있는 위치를 하나씩 불러와 이동 시키자
             foreach (var item in path)
             {
@@ -118,7 +129,7 @@ public class Actor : MonoBehaviour
             // null을 주어 카메라가 따라가지 않도록 하자
             FollowTarget.Instance.SetTarget(null);
             // 이동한 위치에는 플레이어 정보 추가
-            GroundManager.Instance.AddBlockInfo(myPosVector3, GetBlockType(), this);
+            GroundManager.Instance.AddBlockInfo(myTr.position, GetBlockType(), this);
 
 
             completeMove = true;
@@ -170,4 +181,4 @@ public class Actor : MonoBehaviour
         completeAct = true;
         StageManager.GameState = GameStateType.SelectPlayer;
     }
-}
+} 

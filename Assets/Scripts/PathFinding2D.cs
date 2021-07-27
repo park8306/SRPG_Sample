@@ -121,7 +121,7 @@ public static class PathFinding2D
 
         foreach (var item in getNeighbors(currentNode.pos))
         {
-            if (map.ContainsKey(item) && PassableValues.HasFlag(map[item].blockType))
+            if (map.ContainsKey(item) && (PassableValues.HasFlag(map[item].blockType)) || to == item)
             {
                 findTemp(openList, currentNode, item, to, getDistance);
             }
