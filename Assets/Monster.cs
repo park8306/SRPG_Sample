@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class Monster : Actor
 {
+    public int rewardExp = 5;
     public static List<Monster> Monsters = new List<Monster>();
     public override ActorTypeEnum ActorType { get => ActorTypeEnum.Monster; }
     // Start is called before the first frame update
@@ -15,7 +16,7 @@ public class Monster : Actor
     new protected void Awake()
     {
         base.Awake();
-        Monsters.Add(this);
+        Monsters.Add(this); // 생성한 몬스터의 모든 정보를 넣어준다.
     }
     new protected void OnDestroy()
     {
@@ -47,14 +48,14 @@ public class Monster : Actor
 
         yield return null;
     }
-
+    // 가까이에 있는 플레이어를 찾는 함수
     private Player GetNearestPlayer()
     {
-        var myPosition = transform.position;
-        var nearestPlayer= Player.Players
-            .Where(x => x.status != StatusType.Die)
-            .OrderBy(x => Vector3.Distance(x.transform.position, myPosition))
-            .First();
+        var myPosition = transform.position; // 몬스터 자신의 위치
+        var nearestPlayer= Player.Players // 가장가까운 플레이어를 찾아 넣어준다
+            .Where(x => x.status != StatusType.Die) // 죽은 상태가 아닌 플레이어를 찾고
+            .OrderBy(x => Vector3.Distance(x.transform.position, myPosition)) // 플레이어와 몬스터 자신의 거리가 가까운 순으로 정렬을 하고
+            .First(); // 가장 가까운 플레이어의 정보를 가져온다.
         return nearestPlayer;
     }
 

@@ -78,6 +78,10 @@ public class Actor : MonoBehaviour
     }
     protected void OnDestroy()
     {
+        if (GroundManager.ApplicationQuit)
+        {
+            return;
+        }
         GroundManager.Instance.RemoveBlockInfo(transform.position, GetBlockType());
     }
 
@@ -173,7 +177,7 @@ public class Actor : MonoBehaviour
             OnCompleteMove();
         }
     }
-    // 대상의 블록타입을 받아오자
+    // 블록에 들어갈 Monster나 Player 타입을 자식에서 정의한다
     public virtual BlockType GetBlockType()
     {
         Debug.LogError("자식에서 GetBlockType함수 오버라이드 해야함");
@@ -216,7 +220,36 @@ public class Actor : MonoBehaviour
         transform.LookAt(attackTarget.transform);   // 공격 할 대상을 바라보고
 
         animator.Play("Attack");
-        StartCoroutine(attackTarget.TakeHitCO(power));  // 공격 타겟의 TakeHitCo를 실행시키자
+        // 스플레시 데미지 적용하자.
+        SubAttackArea[] subAttackArea = transform.GetComponentsInChildren<SubAttackArea>(true);
+        ActorTypeEnum myActorType = ActorType;
+        foreach (var item in subAttackArea)
+        {
+            
+            var pos = item.transform.position.ToVector2Int();
+            if(GroundManager.Instance.blockInfoMap.TryGetValue(pos,out BlockInfo block))
+            {
+                if (block.actor == null)
+                {
+                    continue;
+                }
+                Actor subAttackTarget = block.actor;
+                switch (item.target)
+                {
+                    case SubAttackArea.Target.EnemyOnly:
+                        if (subAttackTarget.ActorType == myActorType)
+                            continue;
+                        break;
+                    case SubAttackArea.Target.AllyOnly:
+                        if (subAttackTarget.ActorType != myActorType)
+                            continue;
+                        break;
+                }
+                int subAttackPower = (int)(power * item.damageRatio);
+                StartCoroutine(attackTarget.TakeHitCO(power));  // 공격 타겟의 TakeHitCo를 실행시키자
+            }
+        }
+
         yield return new WaitForSeconds(attackTime);    // 일정 공격 시간이 지나고
         completeAct = true; // Act행동을 완료하자
         

@@ -1,12 +1,11 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using UnityEngine;
 
 
 #if UNITY_EDITOR
 using UnityEditor;
-
-[CustomPropertyDrawer(typeof(SaveString))]
-public class SaveStringPropertyDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(SaveInt))]
+public class SaveIntPropertyDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -25,7 +24,7 @@ public class SaveStringPropertyDrawer : PropertyDrawer
             var key = property.FindPropertyRelative("key").stringValue;
             if (string.IsNullOrEmpty(key) == false)
             {
-                PlayerPrefs.SetString(key, value.stringValue);
+                PlayerPrefs.SetInt(key, value.intValue);
                 PlayerPrefs.Save();
             }
         }
@@ -36,24 +35,24 @@ public class SaveStringPropertyDrawer : PropertyDrawer
 #endif
 
 [Serializable]
-public class SaveString
+public class SaveInt 
 {
-    [SerializeField] string key;
-
     [SerializeField]
-    string value;
-    public SaveString(string _key)
+    string key;
+    [SerializeField]
+    int value;
+    public SaveInt(string _key, int defaultValue = 0)
     {
         //key = Application.dataPath + GetType() + _key;
         key = GetType() + _key;
 
         if (PlayerPrefs.HasKey(key))
-            value = PlayerPrefs.GetString(key);
+            value = PlayerPrefs.GetInt(key);
         else
-            value = "";
+            value = defaultValue;
     }
 
-    public string Value
+    public int Value
     {
         get
         {
@@ -63,7 +62,7 @@ public class SaveString
         {
             if (this.value != value)
             {
-                PlayerPrefs.SetString(key, value);
+                PlayerPrefs.SetInt(key, value);
                 PlayerPrefs.Save();
             }
             this.value = value;
@@ -72,6 +71,6 @@ public class SaveString
 
     public override string ToString()
     {
-        return Value;
+        return Value.ToString();
     }
 }

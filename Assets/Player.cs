@@ -8,11 +8,31 @@ using System.Linq;
 public class Player : Actor
 {
     public static List<Player> Players = new List<Player>();
+    public int ID;
+    public SaveInt exp, level;
+    private int maxExp;
+
     // Start is called before the first frame update
     new protected void Awake()
     {
         base.Awake();
         Players.Add(this);
+        InitLevelData();
+    }
+
+    private void InitLevelData()
+    {
+        exp = new SaveInt("exp" + ID);
+        level = new SaveInt("level" + ID, 1);
+        SetLevelData();
+    }
+
+    private void SetLevelData()
+    {
+        var data = GlobalData.Instance.playerDataMap[level.Value];
+        maxExp = data.maxExp;
+        hp = maxHp = data.maxHp;
+        mp = maxMp = data.maxMp;
     }
     new protected void OnDestroy()
     {
@@ -68,11 +88,27 @@ public class Player : Actor
     private IEnumerator AttackToTargetCo_(Monster monster)
     {
         yield return AttackToTargetCo(monster);
-        //if(monster.status == StatusType.Die)
-        //{
-        //    AddExp(monster.rewardExp);
-        //}
+        if (monster.status == StatusType.Die)
+        {
+            AddExp(monster.rewardExp);
+        }
         StageManager.GameState = GameStateType.SelectPlayer;
+    }
+    private void AddExp(int rewardExp)
+    {
+        // 경험치 추가
+        exp.Value += rewardExp;
+        // 경험치가 최대 경험치 보다 클 경우 레벨 증가.
+        if (exp.Value >= maxExp)
+        {
+            // 레벨 업
+            level.Value++;
+            exp.Value -= maxExp;
+            // 레벨 증가할 경우, hp, mp회복, hp, mp 증가
+            SetLevelData();
+
+            CenterNotifyUI.Instance.Show($"lv{level}으로 증가했습니다");
+        }
     }
 
     public void ClearEnemyExitPosint()

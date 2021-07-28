@@ -112,7 +112,7 @@ where T : SingletonBase
 public class SingletonMonoBehavior<T> : SingletonBase
 where T : SingletonBase
 {
-    protected static bool ApplicationQuit = false;
+    public static bool ApplicationQuit = false;
     private void OnApplicationQuit() => ApplicationQuit = true;
 
     static protected T m_instance;
