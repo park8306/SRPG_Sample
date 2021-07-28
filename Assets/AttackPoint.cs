@@ -7,6 +7,6 @@ public class AttackPoint : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

@@ -75,6 +75,10 @@ public class Player : Actor
         {
             return false;
         }
+        if (completeAct)
+        {
+            return false;
+        }
 
         return true;
     }

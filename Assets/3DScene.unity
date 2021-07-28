@@ -26399,13 +26399,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7355272912197447611, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7687669300370196335, guid: 09aa04f74c2044b4a9c7cd6d6e2c2898, type: 3}
       propertyPath: m_LocalPosition.y
@@ -26559,6 +26563,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1493718822, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7736002771885755387, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_Name
       value: MonsterBox
@@ -26569,7 +26577,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8316053675317490782, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8316053675317490782, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -26577,7 +26585,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8316053675317490782, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8316053675317490782, guid: aaab9ced97c123444b4596057c07e07a, type: 3}
       propertyPath: m_LocalRotation.w
