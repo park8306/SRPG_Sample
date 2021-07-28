@@ -10,7 +10,6 @@ public enum GameStateType
     SelectedPlayerMoveOrAct,  // 선택된 플레이어가 이동하거나 행동을 할 차례
     IngPlayerMode,          // 플레이어 이동 중
     SelectToAttackTarget,   // 이동 후에 공격할 타겟을 선택.
-    AttackToTarget,         // 모든 플레이어 선택했다면 MonsterTurn을 진행 시킨다.
     MonsterTurn,
 }
 
@@ -47,7 +46,16 @@ public class StageManager : SingletonMonoBehavior<StageManager>
     {
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            ContextMenuUI.Instance.Show(Input.mousePosition);
+            if(GameState == GameStateType.SelectedPlayerMoveOrAct)
+            {
+                Player.SelectedPlayer = null;
+                BlockInfo.ClearMoveableArea();
+                GameState = GameStateType.SelectPlayer;
+            }
+            else
+            {
+                ContextMenuUI.Instance.Show(Input.mousePosition);
+            }
         }
     }
 

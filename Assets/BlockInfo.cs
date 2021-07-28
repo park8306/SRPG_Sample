@@ -51,19 +51,11 @@ public class BlockInfo : MonoBehaviour
             case GameStateType.SelectToAttackTarget:
                 SelectToAttackTarget();
                 break;
-            case GameStateType.AttackToTarget:
-                AttackToTarget();
-                break;
             case GameStateType.NotInit:
             case GameStateType.IngPlayerMode:
             case GameStateType.MonsterTurn:
                 break;
         }
-    }
-
-    private void AttackToTarget()
-    {
-        throw new NotImplementedException();
     }
 
     private void SelectToAttackTarget()
@@ -147,7 +139,7 @@ public class BlockInfo : MonoBehaviour
         }
     }
     // 이동가능한 거리를 표시했던걸 원래 색으로 바꿔주자
-    private void ClearMoveableArea()
+    public static void ClearMoveableArea()
     {
         // 색을 바꾸고
         highLightedMoveableArea.ForEach(x => x.ToChangeOriginalColor());
