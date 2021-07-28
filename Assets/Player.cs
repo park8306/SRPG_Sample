@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System;
 using System.Linq;
+using Random = UnityEngine.Random;
 
 public class Player : Actor
 {
@@ -95,9 +96,27 @@ public class Player : Actor
         if (monster.status == StatusType.Die)
         {
             AddExp(monster.rewardExp);
+            if(monster.dropItemGroup.ratio > Random.Range(0,1f))
+                DropItem(monster.dropItemGroup.dropItemID, monster.transform.position);
+            //monster.dropGroupID
         }
         StageManager.GameState = GameStateType.SelectPlayer;
     }
+    [ContextMenu("DropTestTemp")]
+    void DropTestTemp()
+    {
+        DropItem(1);
+    }
+    private void DropItem(int dropGroupID, Vector3? position=null)
+    {
+        var dropGroup = GlobalData.Instance.dropItemGroupDataMap[dropGroupID];
+        var dropItemRatioInfo = dropGroup.dropItems.OrderByDescending(x => x.ratio * Random.Range(0, 1f)).First();
+        print(dropItemRatioInfo.ToString());
+        var dropItem = GlobalData.Instance.itemDataMap[dropItemRatioInfo.dropItemID];
+        print(dropItem.ToString());
+        GroundManager.Instance.AddBlockInfo(position.Value, BlockType.Item, dropItem);
+    }
+
     private void AddExp(int rewardExp)
     {
         // 경험치 추가

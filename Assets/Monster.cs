@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class Monster : Actor
 {
+    public ItemDropInfo dropItemGroup;
     public int rewardExp = 5;
     public static List<Monster> Monsters = new List<Monster>();
     public override ActorTypeEnum ActorType { get => ActorTypeEnum.Monster; }

@@ -67,6 +67,24 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
 
     // ...?? 이건 뭐징
     public List<GameObject> debugTextGos = new List<GameObject>();
+    public void AddBlockInfo(Vector3 position, BlockType addBlockType, ItemData dropItem)
+    {
+        // todo : 씬에 드랍 아이템을 보여주자.
+        var dropItemGo = (GameObject)Instantiate(Resources.Load("DropItem"));
+        dropItemGo.GetComponentInChildren<SpriteRenderer>().sprite = (Sprite)Resources.Load("Icon/" + dropItem.iconName, typeof(Sprite));
+        dropItemGo.transform.position = position;
+        Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
+        blockInfoMap[pos].blockType |= addBlockType;
+        blockInfoMap[pos].dropItemID = dropItem.ID;
+        blockInfoMap[pos].dropItemGo = dropItemGo;
+        //blockInfoMap[pos].drop
+        if (true)
+        {
+
+        }
+
+
+    }
 
     // 블록에 추가로 타입을 넣어주기위한 함수
     public void AddBlockInfo(Vector3 position, BlockType addBlockType, Actor actor)
