@@ -76,9 +76,10 @@ public class Actor : MonoBehaviour
         // 다시 앞쪽 보도록 돌림.
         transform.Rotate(0, 90, 0);
     }
+    // 게임이 종료될 때 오브젝트도 파괴가 됨.
     protected void OnDestroy()
     {
-        if (GroundManager.ApplicationQuit)
+        if (GroundManager.ApplicationQuit)  // 플레이가 종료가 되었을 때는 실행이 되지 않도록 함
         {
             return;
         }

@@ -230,23 +230,29 @@ MonoBehaviour:
     sellPrice: 100
     buyPrice: 200
     iconName: apple
-  - ID: 0
-    allowlevel: 0
-    sellPrice: 0
-    buyPrice: 0
+  - ID: 2
+    allowlevel: 2
+    sellPrice: 200
+    buyPrice: 300
     iconName: armor
-  - ID: 0
-    allowlevel: 0
-    sellPrice: 0
-    buyPrice: 0
+  - ID: 3
+    allowlevel: 3
+    sellPrice: 300
+    buyPrice: 400
     iconName: axe
   dropItemGroupDatas:
-  - ID: 0
-    dropItems: []
-  - ID: 0
-    dropItems: []
-  - ID: 0
-    dropItems: []
+  - ID: 1
+    dropItems:
+    - dropItemID: 1
+      ratio: 30
+  - ID: 2
+    dropItems:
+    - dropItemID: 2
+      ratio: 30
+  - ID: 3
+    dropItems:
+    - dropItemID: 3
+      ratio: 40
 --- !u!4 &8456256
 Transform:
   m_ObjectHideFlags: 0

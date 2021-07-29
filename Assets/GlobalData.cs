@@ -5,7 +5,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class PlayerLevelData
-{
+{   // 플레이어의 레벨 별 정보
     public int level;
     public int maxHp;
     public int maxMp;

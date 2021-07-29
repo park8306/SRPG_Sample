@@ -107,6 +107,10 @@ public class BlockInfo : MonoBehaviour
     /// </summary>
     private void SelectPlayer()
     {
+        if (actor == null)
+        {
+            return;
+        }
         // 선택한 actor가 플레이어라면
         if (actor.GetType() == typeof(Player))
         {

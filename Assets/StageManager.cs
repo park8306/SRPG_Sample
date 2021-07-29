@@ -44,15 +44,15 @@ public class StageManager : SingletonMonoBehavior<StageManager>
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
+        if (Input.GetKeyDown(KeyCode.Mouse1))   // 마우스 우클릭 시
+        {// 게임 상태가 움직일 대상을 선택하고 움직이거나 행동해야할 턴일 경우
             if(GameState == GameStateType.SelectedPlayerMoveOrAct)
             {
-                Player.SelectedPlayer = null;
-                BlockInfo.ClearMoveableArea();
-                GameState = GameStateType.SelectPlayer;
+                Player.SelectedPlayer = null;   // 선택된 대상을 풀어주고
+                BlockInfo.ClearMoveableArea();  // 이동 가능 영역을 클리어해주고
+                GameState = GameStateType.SelectPlayer; // 대상을 선택할 턴으로 게임상태를 바꿔줌
             }
-            else
+            else // 나머지 상황에서는 ContextMenuUI를 보여줌
             {
                 ContextMenuUI.Instance.Show(Input.mousePosition);
             }

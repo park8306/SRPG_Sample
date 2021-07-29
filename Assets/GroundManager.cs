@@ -67,23 +67,23 @@ public class GroundManager : SingletonMonoBehavior<GroundManager>
 
     // ...?? 이건 뭐징
     public List<GameObject> debugTextGos = new List<GameObject>();
+    // 블록에 드롭아이템의 정보를 보여줄 함수
     public void AddBlockInfo(Vector3 position, BlockType addBlockType, ItemData dropItem)
     {
         // todo : 씬에 드랍 아이템을 보여주자.
-        var dropItemGo = (GameObject)Instantiate(Resources.Load("DropItem"));
+        var dropItemGo = (GameObject)Instantiate(Resources.Load("DropItem"));// 리소스폴더에서 게임오브젝트 생성
+        // 리소스폴더의 Icon폴더, 아이콘네임을 이용해 스프라이트 설정
         dropItemGo.GetComponentInChildren<SpriteRenderer>().sprite = (Sprite)Resources.Load("Icon/" + dropItem.iconName, typeof(Sprite));
-        dropItemGo.transform.position = position;
+        dropItemGo.transform.position = position;   // 드롭아이템의 위치를 드롭될 위치로 설정
         Vector2Int pos = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z));
         blockInfoMap[pos].blockType |= addBlockType;
         blockInfoMap[pos].dropItemID = dropItem.ID;
         blockInfoMap[pos].dropItemGo = dropItemGo;
         //blockInfoMap[pos].drop
-        if (true)
+        if (useDebugMode)
         {
-
+            blockInfoMap[pos].UpdateDebugINfo();
         }
-
-
     }
 
     // 블록에 추가로 타입을 넣어주기위한 함수

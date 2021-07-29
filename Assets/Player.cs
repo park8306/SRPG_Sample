@@ -18,19 +18,18 @@ public class Player : Actor
     {
         base.Awake();
         Players.Add(this);
-        InitLevelData();
     }
 
     private void InitLevelData()
-    {
+    {   // 저장되어있던 레벨과 경험치를 불러옴
         exp = new SaveInt("exp" + ID);
         level = new SaveInt("level" + ID, 1);
-        SetLevelData();
+        SetLevelData(); // 레벨을 이용해 플레이어의 기본 정보들을 불러옴
     }
 
     private void SetLevelData()
     {
-        var data = GlobalData.Instance.playerDataMap[level.Value];
+        var data = GlobalData.Instance.playerDataMap[level.Value];  // 레벨을 키로 사용해 해당 레벨의 정보를 불러옴
         maxExp = data.maxExp;
         hp = maxHp = data.maxHp;
         mp = maxMp = data.maxMp;
@@ -48,6 +47,7 @@ public class Player : Actor
     // Start is called before the first frame update
     void Start()
     {
+        InitLevelData();
         // 플레이어가 서 있는 블록은 처음에 타입이 walkable밖에 설정되어있지 않다. AddBlockInfo를 실행하여 플레이어의 타입도 넣어주자
         GroundManager.Instance.AddBlockInfo(transform.position, BlockType.Player, this);
         // 처음 시작할 때 플레이어 쪽으로 카메라를 옮기자
@@ -76,7 +76,7 @@ public class Player : Actor
         {
             return false;
         }
-        if (completeAct)
+        if (completeAct)    // 공격을 계속 할 수 있는 상황을 막아줌
         {
             return false;
         }
